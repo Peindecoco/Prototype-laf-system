@@ -1,34 +1,35 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>Missing Items</title>
-  <link rel="stylesheet" href="styles.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Missing Items — FEU Lost & Found</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>Reported Missing Items</h1>
-  <div id="missingList"></div>
+  <header class="header">
+    <img class="logo" src="https://upload.wikimedia.org/wikipedia/en/f/fc/FEU_Tamaraws_logo.svg" alt="FEU logo" />
+    <h1>FEU High School Lost & Found</h1>
+  </header>
 
-  <script>
-    async function loadMissing() {
-      const list = document.getElementById('missingList');
-      list.innerHTML = '';
-      try {
-        const res = await fetch('/api/missing');
-        const items = await res.json();
-        items.forEach(it => {
-          const el = document.createElement('div');
-          el.className = 'missing';
-          el.innerHTML = `<h3>${it.itemName}</h3>
-            <p>${it.description}</p><p>Color: ${it.color} Size: ${it.size} Shape: ${it.shape}</p>
-            <p>Where: ${it.locationLost}</p>`;
-          list.appendChild(el);
-        });
-      } catch (err) {
-        list.textContent = 'Error loading missing items';
-      }
-    }
-    loadMissing();
-  </script>
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="index.html">Found Items</a>
+      <a href="report.html">Report Lost Item</a>
+      <a href="missing.html">Missing Items</a>
+    </div>
+  </nav>
+
+  <main class="container">
+    <h2>Reported Missing Items</h2>
+    <div id="missingList">Loading…</div>
+  </main>
+
+  <footer>
+    <p>© 2025 FEU High School</p>
+    <a href="admin.html" class="hidden-link">Admin</a>
+  </footer>
+
+  <script src="script.js"></script>
 </body>
 </html>
