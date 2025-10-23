@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Missing Items</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <h1>Reported Missing Items</h1>
+  <div id="missingList"></div>
+
+  <script>
+    async function loadMissing() {
+      const list = document.getElementById('missingList');
+      list.innerHTML = '';
+      try {
+        const res = await fetch('/api/missing');
+        const items = await res.json();
+        items.forEach(it => {
+          const el = document.createElement('div');
+          el.className = 'missing';
+          el.innerHTML = `<h3>${it.itemName}</h3>
+            <p>${it.description}</p><p>Color: ${it.color} Size: ${it.size} Shape: ${it.shape}</p>
+            <p>Where: ${it.locationLost}</p>`;
+          list.appendChild(el);
+        });
+      } catch (err) {
+        list.textContent = 'Error loading missing items';
+      }
+    }
+    loadMissing();
+  </script>
+</body>
+</html>

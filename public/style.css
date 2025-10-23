@@ -1,0 +1,5 @@
+body { font-family: Arial, sans-serif; padding: 20px; }
+input, textarea { width: 300px; padding: 8px; margin: 6px 0; }
+button { padding: 8px 12px; margin-top: 8px; }
+.card { border: 1px solid #ddd; padding: 10px; margin: 10px 0; display: inline-block; vertical-align: top; width: 240px; }
+.match img { display:block; margin-bottom:6px; }
