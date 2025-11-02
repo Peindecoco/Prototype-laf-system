@@ -1,53 +1,81 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Dashboard</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Admin Dashboard — FEU</title>
+  <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
   <div class="container">
     <h1>Admin Dashboard</h1>
-    <input type="password" id="adminSecret" placeholder="Enter Admin Secret">
-    <button onclick="loadPending()">Load Pending Reports</button>
-    <div id="pendingList"></div>
+
+    <label>Admin secret</label>
+    <input id="adminSecret" type="password" placeholder="Enter admin secret" />
+
+    <div style="margin-top:12px;">
+      <button id="loadPendingBtn">Load Pending Reports</button>
+    </div>
+
+    <div id="pendingList" style="margin-top:18px;"></div>
   </div>
 
   <script>
+    document.getElementById("loadPendingBtn").addEventListener("click", loadPending);
+
     async function loadPending() {
       const secret = document.getElementById("adminSecret").value;
-      const res = await fetch(`/api/admin/pending?adminSecret=${secret}`);
-      const items = await res.json();
+      if (!secret) { alert("Enter admin secret"); return; }
+      const res = await fetch(`/api/admin/pending?adminSecret=${encodeURIComponent(secret)}`);
+      const json = await res.json();
       const list = document.getElementById("pendingList");
       list.innerHTML = "";
-      if (items.error) return list.textContent = "Unauthorized";
-
-      items.forEach(item => {
+      if (json.error) { list.textContent = "Unauthorized"; return; }
+      if (!json.length) { list.textContent = "No pending reports."; return; }
+      json.forEach(item => {
         const div = document.createElement("div");
-        div.classList.add("card");
+        div.className = "card";
         div.innerHTML = `
-          <h3>${item.name}</h3>
-          <p>${item.description}</p>
-          <small>${item.color} • ${item.shape} • ${item.size}</small>
-          <p><b>Location:</b> ${item.location}</p>
-          <input type="text" placeholder="Image URL (optional)" id="img-${item._id}">
-          <button onclick="approve('${item._id}')">Approve</button>
+          <h3>${escapeHtml(item.name)}</h3>
+          <p>${escapeHtml(item.description)}</p>
+          <small>${escapeHtml(item.color)} • ${escapeHtml(item.shape)} • ${escapeHtml(item.size)}</small>
+          <p><b>Location:</b> ${escapeHtml(item.location)}</p>
+          <input id="img-${item._id}" placeholder="Optional image URL" style="width:100%;padding:8px;margin-top:8px" />
+          <div style="margin-top:8px">
+            <button onclick="approve('${item._id}')">Approve</button>
+            <button onclick="removeCard(this)">Dismiss</button>
+          </div>
         `;
         list.appendChild(div);
       });
     }
 
     async function approve(id) {
-      const adminSecret = document.getElementById("adminSecret").value;
-      const imageUrl = document.getElementById(`img-${id}`).value;
-      await fetch(`/api/admin/approve/${id}`, {
+      const secret = document.getElementById("adminSecret").value;
+      const imageUrl = document.getElementById(`img-${id}`).value || "";
+      const res = await fetch(`/api/admin/approve/${id}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ adminSecret, imageUrl }),
+        body: JSON.stringify({ adminSecret: secret, imageUrl })
       });
-      alert("Item approved!");
+      const json = await res.json();
+      if (json.error) return alert("Error: " + json.error);
+      alert(json.message || "Approved");
       loadPending();
+    }
+
+    function removeCard(btn) {
+      const card = btn.closest('.card');
+      if (card) card.remove();
+    }
+
+    function escapeHtml(s = "") {
+      return s
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
     }
   </script>
 </body>
