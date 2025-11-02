@@ -1,37 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Report Lost Item</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Report Lost Item — FEU</title>
+  <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
   <div class="container">
     <h1>Report Missing Item</h1>
     <form id="reportForm">
-      <input type="text" name="name" placeholder="Item Name" required>
-      <textarea name="description" placeholder="Description" required></textarea>
-      <input type="text" name="color" placeholder="Color" required>
-      <input type="text" name="size" placeholder="Size">
-      <input type="text" name="shape" placeholder="Shape">
-      <input type="text" name="location" placeholder="Location Found/Lost" required>
-      <button type="submit">Submit Report</button>
+      <input name="name" placeholder="Item name" required />
+      <textarea name="description" placeholder="Description"></textarea>
+      <input name="color" placeholder="Color" />
+      <input name="size" placeholder="Size" />
+      <input name="shape" placeholder="Shape" />
+      <input name="location" placeholder="Where was it lost?" required />
+      <div class="actions">
+        <button type="submit">Submit Report</button>
+      </div>
     </form>
     <p id="response"></p>
+    <p><a href="index.html">Back to Gallery</a></p>
   </div>
 
   <script>
     document.getElementById("reportForm").addEventListener("submit", async (e) => {
       e.preventDefault();
-      const formData = Object.fromEntries(new FormData(e.target).entries());
-      const res = await fetch("/api/report", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-      const data = await res.json();
-      document.getElementById("response").textContent = data.message;
+      const data = Object.fromEntries(new FormData(e.target).entries());
+      document.getElementById("response").textContent = "Submitting...";
+      try {
+        const res = await fetch("/api/report", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
+        });
+        const json = await res.json();
+        document.getElementById("response").textContent = json.message || json.error || "Done";
+        e.target.reset();
+      } catch (err) {
+        document.getElementById("response").textContent = "Error: " + err.message;
+      }
     });
   </script>
 </body>
