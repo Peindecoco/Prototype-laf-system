@@ -1,58 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Admin — FEU Lost & Found</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header class="header">
-    <img class="logo" src="https://1.bp.blogspot.com/-s2JOFKG6Ba0/Xliz5RSyksI/AAAAAAAAKU4/-XLpJJv_7AAZDlm2WSiZgiZit83g3shPACLcBGAsYHQ/s1600/feu-logo.png" alt="FEU logo" />
-    <h1>Admin — FEU Lost & Found</h1>
-  </header>
+  <div class="container">
+    <h1>Admin Dashboard</h1>
+    <input type="password" id="adminSecret" placeholder="Enter Admin Secret">
+    <button onclick="loadPending()">Load Pending Reports</button>
+    <div id="pendingList"></div>
+  </div>
 
-  <main class="container">
-    <h2>Upload Found Item (Admin only)</h2>
-    <div class="form">
-      <form id="adminForm" enctype="multipart/form-data">
-        <label>Admin secret</label>
-        <input name="adminSecret" required />
+  <script>
+    async function loadPending() {
+      const secret = document.getElementById("adminSecret").value;
+      const res = await fetch(`/api/admin/pending?adminSecret=${secret}`);
+      const items = await res.json();
+      const list = document.getElementById("pendingList");
+      list.innerHTML = "";
+      if (items.error) return list.textContent = "Unauthorized";
 
-        <label>Item name</label>
-        <input name="name" required />
+      items.forEach(item => {
+        const div = document.createElement("div");
+        div.classList.add("card");
+        div.innerHTML = `
+          <h3>${item.name}</h3>
+          <p>${item.description}</p>
+          <small>${item.color} • ${item.shape} • ${item.size}</small>
+          <p><b>Location:</b> ${item.location}</p>
+          <input type="text" placeholder="Image URL (optional)" id="img-${item._id}">
+          <button onclick="approve('${item._id}')">Approve</button>
+        `;
+        list.appendChild(div);
+      });
+    }
 
-        <label>Description</label>
-        <textarea name="description"></textarea>
-
-        <label>Color</label>
-        <input name="color" />
-
-        <label>Size</label>
-        <input name="size" />
-
-        <label>Shape</label>
-        <input name="shape" />
-
-        <label>Location found</label>
-        <input name="locationFound" />
-
-        <label>Image</label>
-        <input type="file" name="image" accept="image/*" />
-
-        <div class="actions">
-          <button type="submit" class="btn">Upload</button>
-          <a href="index.html" class="btn secondary">Back</a>
-        </div>
-      </form>
-    </div>
-    <p id="uploadStatus"></p>
-  </main>
-
-  <footer>
-    <p>© 2025 FEU High School</p>
-  </footer>
-
-  <script src="script.js"></script>
+    async function approve(id) {
+      const adminSecret = document.getElementById("adminSecret").value;
+      const imageUrl = document.getElementById(`img-${id}`).value;
+      await fetch(`/api/admin/approve/${id}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ adminSecret, imageUrl }),
+      });
+      alert("Item approved!");
+      loadPending();
+    }
+  </script>
 </body>
 </html>
