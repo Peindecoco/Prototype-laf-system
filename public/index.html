@@ -1,40 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Found Items — FEU Lost & Found</title>
-  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="container">
-    <h1>Approved Lost & Found Items</h1>
-    <div id="gallery"></div>
-    <p style="margin-top:12px"><a href="report.html">Report a missing item</a></p>
-  </div>
+  <header class="header">
+    <img class="logo" src="https://upload.wikimedia.org/wikipedia/en/f/fc/FEU_Tamaraws_logo.svg" alt="FEU logo" />
+    <h1>FEU High School Lost & Found</h1>
+  </header>
 
-  <script>
-    async function loadItems() {
-      const res = await fetch("/api/items");
-      const items = await res.json();
-      const g = document.getElementById("gallery");
-      g.innerHTML = "";
-      if (!items || !items.length) { g.textContent = "No items yet."; return; }
-      items.forEach(it => {
-        const div = document.createElement("div");
-        div.className = "card";
-        div.innerHTML = `
-          <img src="${escapeHtml(it.imageUrl || '') || 'https://via.placeholder.com/600x400?text=No+Image'}" alt="${escapeHtml(it.name)}" style="width:100%;height:auto;border-radius:6px" />
-          <h3>${escapeHtml(it.name)}</h3>
-          <p>${escapeHtml(it.description)}</p>
-          <small>${escapeHtml(it.color)} • ${escapeHtml(it.shape)} • ${escapeHtml(it.size)}</small>
-          <p><b>Location:</b> ${escapeHtml(it.location)}</p>
-        `;
-        g.appendChild(div);
-      });
-    }
-    function escapeHtml(s=""){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;'); }
-    loadItems();
-  </script>
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="index.html">Found Items</a>
+      <a href="report.html">Report Lost Item</a>
+      <a href="missing.html">Missing Items</a>
+    </div>
+  </nav>
+
+  <main class="container">
+    <h2>Found Items Gallery</h2>
+    <div id="foundGallery">Loading…</div>
+  </main>
+
+  <footer>
+    <p>© 2025 FEU High School</p>
+    <a href="admin.html" class="hidden-link">Admin</a>
+  </footer>
+
+  <script src="script.js"></script>
 </body>
 </html>
