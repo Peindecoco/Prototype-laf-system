@@ -1,47 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Report Lost Item — FEU</title>
-  <link rel="stylesheet" href="style.css"/>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Report Lost Item — FEU Lost & Found</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="container">
-    <h1>Report Missing Item</h1>
-    <form id="reportForm">
-      <input name="name" placeholder="Item name" required />
-      <textarea name="description" placeholder="Description"></textarea>
-      <input name="color" placeholder="Color" />
-      <input name="size" placeholder="Size" />
-      <input name="shape" placeholder="Shape" />
-      <input name="location" placeholder="Where was it lost?" required />
-      <div class="actions">
-        <button type="submit">Submit Report</button>
-      </div>
-    </form>
-    <p id="response"></p>
-    <p><a href="index.html">Back to Gallery</a></p>
-  </div>
+  <header class="header">
+    <img class="logo" src="https://upload.wikimedia.org/wikipedia/en/f/fc/FEU_Tamaraws_logo.svg" alt="FEU logo" />
+    <h1>FEU High School Lost & Found</h1>
+  </header>
 
-  <script>
-    document.getElementById("reportForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const data = Object.fromEntries(new FormData(e.target).entries());
-      document.getElementById("response").textContent = "Submitting...";
-      try {
-        const res = await fetch("/api/report", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data)
-        });
-        const json = await res.json();
-        document.getElementById("response").textContent = json.message || json.error || "Done";
-        e.target.reset();
-      } catch (err) {
-        document.getElementById("response").textContent = "Error: " + err.message;
-      }
-    });
-  </script>
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="index.html">Found Items</a>
+      <a href="report.html">Report Lost Item</a>
+      <a href="missing.html">Missing Items</a>
+    </div>
+  </nav>
+
+  <main class="container">
+    <h2>Report a Lost Item</h2>
+    <div class="form">
+      <form id="reportForm">
+        <label>Item name</label>
+        <input name="itemName" required />
+
+        <label>Description</label>
+        <textarea name="description"></textarea>
+
+        <label>Color</label>
+        <input name="color" />
+
+        <label>Size</label>
+        <input name="size" />
+
+        <label>Shape</label>
+        <input name="shape" />
+
+        <label>Where was it lost?</label>
+        <input name="locationLost" required />
+
+        <label>Secret detail (only you know)</label>
+        <input name="secretDetail" required />
+
+        <label>Contact (optional)</label>
+        <input name="contact" />
+
+        <div class="actions">
+          <button type="submit" class="btn">Submit report</button>
+          <a href="index.html" class="btn secondary">Back to Gallery</a>
+        </div>
+      </form>
+    </div>
+
+    <div id="reportMatches"></div>
+    <p id="reportStatus" style="margin-top:10px"></p>
+  </main>
+
+  <footer>
+    <p>© 2025 FEU High School</p>
+    <a href="admin.html" class="hidden-link">Admin</a>
+  </footer>
+
+  <script src="script.js"></script>
 </body>
 </html>
