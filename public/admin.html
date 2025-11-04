@@ -8,22 +8,22 @@
 </head>
 <body>
   <header class="header">
-    <img class="logo" src="https://www.feu.edu.ph/feu-group-of-schools-2/" alt="FEU logo" />
+    <img class="logo" src="https://upload.wikimedia.org/wikipedia/en/2/26/Far_Eastern_University_logo.svg" alt="FEU logo" />
     <h1>Admin — FEU Lost & Found</h1>
   </header>
 
   <main class="container">
-    <h2>Upload Found Item (Admin only)</h2>
+    <h2>Upload Found Item (Admin Only)</h2>
     <div class="form">
       <form id="adminForm" enctype="multipart/form-data">
-        <label>Admin secret</label>
-        <input name="adminSecret" required />
+        <label>Admin Secret</label>
+        <input type="password" name="adminSecret" id="adminSecret" required />
 
-        <label>Item name</label>
+        <label>Item Name</label>
         <input name="name" required />
 
         <label>Description</label>
-        <textarea name="description"></textarea>
+        <textarea name="description" rows="3"></textarea>
 
         <label>Color</label>
         <input name="color" />
@@ -34,12 +34,12 @@
         <label>Shape</label>
         <input name="shape" />
 
-        <label>Location found</label>
+        <label>Location Found</label>
         <input name="locationFound" />
 
-        <label>Secret Detail (for verification only)</label>
-        <textarea name="secretDetail" placeholder="Enter a hidden detail only the owner would know..." required></textarea>
-        
+        <label>Secret Detail (Admin Eyes Only)</label>
+        <textarea name="secretDetail" rows="2" placeholder="Example: hidden engraving, tag code, or secret mark"></textarea>
+
         <label>Image</label>
         <input type="file" name="image" accept="image/*" />
 
