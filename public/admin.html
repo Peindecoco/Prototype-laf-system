@@ -1,54 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Admin — FEU Lost & Found</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <header class="header">
-    <img class="logo" src="https://upload.wikimedia.org/wikipedia/en/3/32/FEU_Tamaraws.png" alt="FEU Logo">
+    <img class="logo" src="https://upload.wikimedia.org/wikipedia/en/f/fc/FEU_Tamaraws_logo.svg" alt="FEU logo" />
     <h1>Admin — FEU Lost & Found</h1>
-    <nav>
-      <a href="index.html">Gallery</a>
-      <a href="report.html">Report</a>
-      <a href="admin.html" class="active">Admin</a>
-    </nav>
   </header>
 
   <main class="container">
-    <h2>Upload Found Item</h2>
-    <form id="adminForm" enctype="multipart/form-data">
-      <label>Admin Secret</label>
-      <input name="adminSecret" required placeholder="Enter admin key">
+    <h2>Upload Found Item (Admin only)</h2>
+    <div class="form">
+      <form id="adminForm" enctype="multipart/form-data">
+        <label>Admin secret</label>
+        <input name="adminSecret" required />
 
-      <label>Item Name</label>
-      <input name="name" required>
+        <label>Item name</label>
+        <input name="name" required />
 
-      <label>Description</label>
-      <textarea name="description"></textarea>
+        <label>Description</label>
+        <textarea name="description"></textarea>
 
-      <label>Color</label>
-      <input name="color">
+        <label>Color</label>
+        <input name="color" />
 
-      <label>Size</label>
-      <input name="size">
+        <label>Size</label>
+        <input name="size" />
 
-      <label>Shape</label>
-      <input name="shape">
+        <label>Shape</label>
+        <input name="shape" />
 
-      <label>Location Found</label>
-      <input name="locationFound">
+        <label>Location found</label>
+        <input name="locationFound" />
 
-      <label>Secret Detail (for verification)</label>
-      <input name="secretDetail">
+        <label>Image</label>
+        <input type="file" name="image" accept="image/*" />
 
-      <label>Image</label>
-      <input type="file" name="image" accept="image/*">
-
-      <button type="submit" class="btn">Upload</button>
-    </form>
+        <div class="actions">
+          <button type="submit" class="btn">Upload</button>
+          <a href="index.html" class="btn secondary">Back</a>
+        </div>
+      </form>
+    </div>
     <p id="uploadStatus"></p>
   </main>
 
