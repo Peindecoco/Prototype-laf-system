@@ -35,6 +35,7 @@ const itemSchema = new mongoose.Schema({
   size: String,
   shape: String,
   location: String,
+  secretDetail: String,
   imageUrl: String,
   status: { type: String, default: "pending" }, // 'pending' or 'approved'
   createdAt: { type: Date, default: Date.now }
