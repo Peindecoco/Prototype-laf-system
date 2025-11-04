@@ -5,6 +5,15 @@ body {
   margin: 0;
   padding: 0;
 }
+body { font-family: Arial, sans-serif; background:#f7f7f7; margin:0; padding:20px; color:#222; }
+.container { max-width:800px; margin:auto; background:#fff; padding:18px; border-radius:10px; box-shadow:0 6px 20px rgba(0,0,0,0.05); }
+h1{margin-bottom:12px}
+input, textarea { width:100%; padding:10px; margin-top:8px; border-radius:6px; border:1px solid #ccc; box-sizing:border-box; }
+button { padding:10px 14px; margin-top:10px; background:#006633; color:#fff; border:none; border-radius:6px; cursor:pointer; }
+.card { background:#fafafa; border:1px solid #eee; padding:12px; margin-top:12px; border-radius:8px; }
+img { max-width:100%; border-radius:8px; display:block; margin-bottom:8px; }
+.actions { display:flex; gap:8px; justify-content:flex-end; margin-top:10px; }
+@media (max-width:600px){ .container{ padding:12px } }
 
 .header {
   display: flex;
