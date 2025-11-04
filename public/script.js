@@ -1,28 +1,32 @@
-const form = document.getElementById("adminForm");
-const statusEl = document.getElementById("uploadStatus");
+// FRONTEND MOCK (No database)
+const gallery = document.getElementById('gallery');
+const uploadStatus = document.getElementById('uploadStatus');
+const status = document.getElementById('status');
 
-// Change this to your actual backend admin password
-const ADMIN_PASSWORD = "feu2025admin";
+if (gallery) {
+  gallery.innerHTML = `
+    <div><img src="https://via.placeholder.com/200" alt="Wallet"><p><strong>Black Wallet</strong><br>Found in Canteen</p></div>
+    <div><img src="https://via.placeholder.com/200" alt="Umbrella"><p><strong>Green Umbrella</strong><br>Found near Gym</p></div>
+  `;
+}
 
-form.addEventListener("submit", async (e) => {
-  e.preventDefault();
+if (document.getElementById('reportForm')) {
+  document.getElementById('reportForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    status.textContent = "Your report has been submitted! Waiting for admin approval.";
+    e.target.reset();
+  });
+}
 
-  const adminSecret = document.getElementById("adminSecret").value;
-  if (adminSecret !== ADMIN_PASSWORD) {
-    statusEl.textContent = "❌ Incorrect admin secret!";
-    statusEl.style.color = "red";
-    return;
-  }
-
-  const formData = new FormData(form);
-
-  // 🧠 Example of what will be sent to your backend:
-  const data = Object.fromEntries(formData.entries());
-  console.log("Data to upload:", data);
-
-  // You’ll later replace this with your actual fetch("/api/items", { ... })
-  statusEl.textContent = "✅ Item uploaded successfully (mock).";
-  statusEl.style.color = "green";
-
-  form.reset();
-});
+if (document.getElementById('adminForm')) {
+  document.getElementById('adminForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const secret = e.target.adminSecret.value;
+    if (secret !== "feuadmin123") {
+      uploadStatus.textContent = "❌ Unauthorized: Incorrect admin secret.";
+      return;
+    }
+    uploadStatus.textContent = "✅ Item uploaded successfully (mock version)";
+    e.target.reset();
+  });
+}
