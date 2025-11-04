@@ -3,31 +3,27 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Found Items — FEU Lost & Found</title>
+  <title>FEU Lost & Found</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <header class="header">
-    <img class="logo" src="https://www.bing.com/ck/a?!&&p=0802209a3993bb0af1098ea2e9a45ca90b3d031f922d9cb2ed454ac49a165c7bJmltdHM9MTc2MjA0MTYwMA&ptn=3&ver=2&hsh=4&fclid=01592e0d-1005-6890-2be0-3862111169b0&u=a1L2ltYWdlcy9zZWFyY2g_cT1mZXUraGlnaCtzY2hvb2wrbG9nbyZpZD1ERDNERENGNUUxRTIwOTcxQzIzMkNDODc4QTlFMjhGM0Q2NDg3NkQwJkZPUk09SVFGUkJB" alt="FEU logo" />
-    <h1>FEU High School Lost & Found</h1>
+    <img class="logo" src="https://upload.wikimedia.org/wikipedia/en/3/32/FEU_Tamaraws.png" alt="FEU Logo">
+    <h1>FEU High School — Lost & Found</h1>
+    <nav>
+      <a href="index.html" class="active">Gallery</a>
+      <a href="report.html">Report Missing</a>
+      <a href="admin.html">Admin</a>
+    </nav>
   </header>
 
-  <nav class="navbar">
-    <div class="nav-inner">
-      <a href="index.html">Found Items</a>
-      <a href="report.html">Report Lost Item</a>
-      <a href="missing.html">Missing Items</a>
-    </div>
-  </nav>
-
   <main class="container">
-    <h2>Found Items Gallery</h2>
-    <div id="foundGallery">Loading…</div>
+    <h2>Found Items</h2>
+    <div id="gallery" class="gallery"></div>
   </main>
 
   <footer>
     <p>© 2025 FEU High School</p>
-    <a href="admin.html" class="hidden-link">Admin</a>
   </footer>
 
   <script src="script.js"></script>
