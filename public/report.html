@@ -1,69 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Report Lost Item — FEU Lost & Found</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <title>Report Lost Item</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <header class="header">
-    <img class="logo" src="https://upload.wikimedia.org/wikipedia/en/f/fc/FEU_Tamaraws_logo.svg" alt="FEU logo" />
-    <h1>FEU High School Lost & Found</h1>
-  </header>
+  <h1>Report a Lost Item</h1>
+  <form id="reportForm">
+    <input type="text" name="itemName" placeholder="Item name" required><br>
+    <input type="text" name="locationLost" placeholder="Where was it lost?" required><br>
+    <input type="text" name="color" placeholder="Color"><br>
+    <input type="text" name="size" placeholder="Size"><br>
+    <input type="text" name="shape" placeholder="Shape"><br>
+    <input type="text" name="secretDetail" placeholder="Secret detail (only you know)" required><br>
+    <button type="submit">Submit</button>
+  </form>
 
-  <nav class="navbar">
-    <div class="nav-inner">
-      <a href="index.html">Found Items</a>
-      <a href="report.html">Report Lost Item</a>
-      <a href="missing.html">Missing Items</a>
-    </div>
-  </nav>
+  <p id="message"></p>
 
-  <main class="container">
-    <h2>Report a Lost Item</h2>
-    <div class="form">
-      <form id="reportForm">
-        <label>Item name</label>
-        <input name="itemName" required />
-
-        <label>Description</label>
-        <textarea name="description"></textarea>
-
-        <label>Color</label>
-        <input name="color" />
-
-        <label>Size</label>
-        <input name="size" />
-
-        <label>Shape</label>
-        <input name="shape" />
-
-        <label>Where was it lost?</label>
-        <input name="locationLost" required />
-
-        <label>Secret detail (only you know)</label>
-        <input name="secretDetail" required />
-
-        <label>Contact (optional)</label>
-        <input name="contact" />
-
-        <div class="actions">
-          <button type="submit" class="btn">Submit report</button>
-          <a href="index.html" class="btn secondary">Back to Gallery</a>
-        </div>
-      </form>
-    </div>
-
-    <div id="reportMatches"></div>
-    <p id="reportStatus" style="margin-top:10px"></p>
-  </main>
-
-  <footer>
-    <p>© 2025 FEU High School</p>
-    <a href="admin.html" class="hidden-link">Admin</a>
-  </footer>
-
-  <script src="script.js"></script>
+  <script>
+    const form = document.getElementById('reportForm');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(form).entries());
+      const res = await fetch('/report', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(data)
+      });
+      const msg = await res.json();
+      document.getElementById('message').textContent = msg.message || msg.error;
+      form.reset();
+    });
+  </script>
 </body>
 </html>
