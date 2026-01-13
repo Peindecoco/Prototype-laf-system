@@ -2,33 +2,30 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Found Items Gallery</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="container">
-    <h1>Approved Lost & Found Items</h1>
-    <div id="gallery"></div>
-  </div>
+  <h1>Found Items</h1>
+  <div id="gallery"></div>
 
   <script>
     async function loadItems() {
-      const res = await fetch("/api/items");
+      const res = await fetch('/items');
       const items = await res.json();
-      const gallery = document.getElementById("gallery");
-      gallery.innerHTML = "";
+      const gallery = document.getElementById('gallery');
+      gallery.innerHTML = '';
+
       items.forEach(item => {
-        const card = document.createElement("div");
-        card.classList.add("card");
-        card.innerHTML = `
-          <img src="${item.imageUrl || 'placeholder.png'}" alt="${item.name}">
+        const div = document.createElement('div');
+        div.className = 'item';
+        div.innerHTML = `
+          <img src="${item.imageUrl}" alt="${item.name}" width="200">
           <h3>${item.name}</h3>
           <p>${item.description}</p>
-          <small>${item.color} • ${item.shape} • ${item.size}</small>
-          <p><b>Location:</b> ${item.location}</p>
+          <button>Claim</button>
         `;
-        gallery.appendChild(card);
+        gallery.appendChild(div);
       });
     }
     loadItems();
