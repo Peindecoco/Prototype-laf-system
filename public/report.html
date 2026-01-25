@@ -1,38 +1,86 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Report Lost Item</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report Lost Item</title>
+
+    <link rel="icon" type="image/x-icon" href="assets/web_icon.png">
+    <link rel="stylesheet" href="common.css">
+    <link rel="stylesheet" href="report_sheet.css">
 </head>
 <body>
-  <h1>Report a Lost Item</h1>
-  <form id="reportForm">
-    <input type="text" name="itemName" placeholder="Item name" required><br>
-    <input type="text" name="locationLost" placeholder="Where was it lost?" required><br>
-    <input type="text" name="color" placeholder="Color"><br>
-    <input type="text" name="size" placeholder="Size"><br>
-    <input type="text" name="shape" placeholder="Shape"><br>
-    <input type="text" name="secretDetail" placeholder="Secret detail (only you know)" required><br>
-    <button type="submit">Submit</button>
-  </form>
 
-  <p id="message"></p>
+<div class="container">
 
-  <script>
-    const form = document.getElementById('reportForm');
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const data = Object.fromEntries(new FormData(form).entries());
-      const res = await fetch('/report', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(data)
-      });
-      const msg = await res.json();
-      document.getElementById('message').textContent = msg.message || msg.error;
-      form.reset();
-    });
-  </script>
+    <header>
+        <img src="assets/feu_hs_logo.png" alt="" class="title-img">
+        <img src="assets/feu_hs_laf.png" alt="" class="title-text">
+    </header>
+
+    <nav>
+        <a href="index.html"><span class="gold-text">01</span> HOME</a>
+        <a href="report.html" class="nav-active"><span>02</span> REPORT</a>
+        <a href="#"><span class="gold-text">03</span> HELP</a>
+    </nav>
+
+    <div class="main">
+        <div class="report-sheet">
+            <h1>Report a Lost Item</h1>
+
+            <form class="report-form" id="reportForm">
+                <input type="text" name="itemName" placeholder="Item name" required>
+                <input type="text" name="locationLost" placeholder="Where was it lost?" required>
+                <input type="text" name="color" placeholder="Color">
+                <input type="text" name="size" placeholder="Size">
+                <input type="text" name="shape" placeholder="Shape">
+                <input type="text" name="secretDetail" placeholder="Secret detail (only you know)" required>
+
+                <button type="submit" class="btn">Submit</button>
+            </form>
+
+            <p id="message"></p>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2026 FEU High School Lost and Found</p>
+            <p>Powered by FEU Tech Team</p>
+        </div>
+    </footer>
+
+</div>
+
+<script>
+const form = document.getElementById('reportForm');
+const message = document.getElementById('message');
+
+form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const data = Object.fromEntries(new FormData(form).entries());
+
+    try {
+        const res = await fetch('/report', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+
+        const result = await res.json();
+
+        message.textContent = result.message || result.error;
+        message.style.color = result.error ? 'red' : 'green';
+
+        if (!result.error) form.reset();
+
+    } catch (err) {
+        message.textContent = 'Error submitting report.';
+        message.style.color = 'red';
+    }
+});
+</script>
+
 </body>
 </html>
