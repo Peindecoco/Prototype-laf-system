@@ -1,136 +1,313 @@
-/* ===============================
-   GLOBAL
-   =============================== */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   font-family: "Segoe UI", Arial, sans-serif;
 }
-
 body {
-  min-height: 100vh;
-  background:
-    linear-gradient(
-      rgba(0, 0, 0, 0.35),
-      rgba(0, 0, 0, 0.35)
-    ),
-    url("assets/feu-bg.jpg") center / cover no-repeat fixed;
+  background-color: var(--light-bg);
+  color: var(--text-dark);
+  display: flex;
+  flex-direction: column;
+}
+button {
+  font-family: "Segoe UI", Arial, sans-serif;
 }
 
-/* ===============================
-   HEADER
-   =============================== */
+/* ===== FEU INSPIRED GLOBAL STYLE ===== */
+:root {
+  --feu-green: #008248;
+  --feu-light-green: #00AB5F;
+  --feu-dark-green: #084c2a;
+  --feu-gold: #f4c430;
+  --feu-red: #F30006;
+  --light-bg: #f5f7f6;
+  --text-dark: #1f2933;
+  --text-gray: #808080;
+}
+.dark-green-text {
+  color: var(--feu-dark-green);
+}
+.gold-text {
+  color: var(--feu-gold);
+}
+.red-text {
+  color: var(--feu-red);
+}
+
+/* ===== SCROLL ===== */
+::-webkit-scrollbar {
+  width: 10px;
+  background-color: lightgray;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #093916;
+}
+
+/* ===== CONTAINER ===== */
+.container {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===== HEADER & NAVBAR ===== */
 header {
-  background: #f5f5f5;
-  padding: 0.8rem 1.5rem;
-  text-align: center;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
 }
-
-header h1 {
-  color: #0a5c2f;
-  font-size: 1.6rem;
-  font-weight: 800;
+.title-img {
+  height: 35px;
 }
-
-/* ===============================
-   NAVBAR
-   =============================== */
+.title-text {
+  height: 25px;
+}
 nav {
-  background: #0a5c2f;
+  background-color: var(--feu-green);
+  height: 40px;
+  display: flex;
+  align-items: center;
+  padding: 0 120px;
   display: flex;
   justify-content: center;
-  gap: 1.2rem;
-  padding: 0.6rem 0;
+  gap: 40px;
 }
-
 nav a {
-  color: #f4c430;
+  height: 25px;
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  transition: ease-in-out 0.1s;
+  color: var(--light-bg);
   text-decoration: none;
-  font-weight: 700;
-  padding: 0.4rem 0.8rem;
-  border-radius: 6px;
+  font-weight: 500;
+  font-size: 90%;
+  padding: 0 7px;
 }
-
-nav a.active,
 nav a:hover {
-  background: #f4c430;
-  color: #0a5c2f;
+  transition: ease-in-out 0.1s;
+  color: var(--feu-red);
+}
+.nav-active:hover {
+  color: var(--feu-dark-green);
+}
+.nav-active {
+  background-color: var(--feu-gold);
+  color: var(--feu-dark-green);
+  border-radius: 5px;
 }
 
-/* ===============================
-   MAIN SECTION (GLASS PANEL)
-   =============================== */
-main {
-  max-width: 1300px;
-  margin: 2.5rem auto;
-  padding: 2rem;
-  background: rgba(255, 255, 255, 0.25);
-  backdrop-filter: blur(8px);
-  border-radius: 16px;
-}
-
-/* ===============================
-   TITLE
-   =============================== */
-main h2 {
-  color: #1f2933;
-  margin-bottom: 1.5rem;
-  font-size: 1.8rem;
-}
-
-/* ===============================
-   GALLERY GRID
-   =============================== */
-.gallery {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 1.5rem;
-}
-
-/* ===============================
-   CARD
-   =============================== */
-.card {
-  background: #ffffff;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-  transition: transform 0.3s;
-}
-
-.card:hover {
-  transform: translateY(-6px);
-}
-
-.card img {
+/* ===== MAIN CONTENT ===== */
+.main { /*common*/
+  background-image: url(../assets/feu_grounds_bg.png);
+  background-size: cover;
+  background-position: bottom;
+  height: 700px;
   width: 100%;
-  height: 160px;
-  object-fit: cover;
-  background: #e5e7eb;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.main-home {
+  background-image: url(../assets/feu_grounds_bg.png);
+  background-size: cover;
+  background-position: bottom;
+  height: 800px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.main-admin {
+  background-image: url(../assets/feu_grounds_bg.png);
+  background-size: cover;
+  background-position: bottom;
+  height: 750px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.main-login {
+  background-size: cover;
+  background-position: bottom;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.card .info {
-  padding: 0.8rem;
+/* ===== Login ===== */
+.container-login {
+  height: 90%;
+}
+.login {
+  width: 650px;
+  height: 550px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.login-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 10px;
+}
+.nav-login {
+  height: 10px;
+}
+.login-topheader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.login-subheader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+.login-logo {
+  height: 150px;
+}
+.login-title {
+  height: 130px;
+}
+.login-subtitle-hs {
+  width: 500px;
+}
+.login-subtitle-laf {
+  width: 400px;
+}
+
+/* ===== USER PASS ===== */
+.container-user-pass {
+  height: 100%;
+  width: 85%;
+  margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.container-user-pass h1 {
+  font-size: 150%;
+  font-weight: normal;
+}
+.container-user-pass button {
+  margin: 0 100px;
+}
+
+/* ===== CARDS / SECTIONS ===== */
+.section {
+  background: var(--light-bg);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
+  border-left: 6px solid var(--feu-green);
+}
+.section h2 {
+  color: var(--feu-green);
+  margin-bottom: 0.5rem;
+}
+
+/* ===== BUTTONS ===== needs remaking*/
+
+/* ===== TABLES ===== */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+table th {
+  background-color: var(--feu-green);
+  color: var(--light-bg);
+  padding: 0.75rem;
+}
+table td {
+  padding: 0.75rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+/* ===== FOOTER ===== */
+footer {
+  background-color: var(--feu-dark-green);
+  height: 150px;
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  padding: 0 100px;
+}
+.footer-content {
+  color: var(--light-bg);
   text-align: center;
+  width: 100%;
+}
+.footer-content p {
+  margin: 0.5rem 0;
+  font-size: 100%;
 }
 
-.card .info h4 {
-  font-weight: 700;
-  color: #6b7280;
-}
+@media (max-width: 800px) or (max-height: 500px) {
 
-/* ===============================
-   RESPONSIVE
-   =============================== */
-@media (max-width: 1200px) {
-  .gallery {
-    grid-template-columns: repeat(3, 1fr);
+  /* ===== HEADER / NAVBAR ===== */
+  header {
+    height: 50px;
   }
-}
-
-@media (max-width: 700px) {
-  .gallery {
-    grid-template-columns: repeat(2, 1fr);
+  .title-img {
+    height: 25px;
   }
+  .title-text {
+    height: 15px;
+  }
+  nav {
+    height: 70px;
+    padding: 0 10px;
+    gap: 10px;
+  }
+  nav a {
+    height: 45px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    gap: 0px;
+    align-items: center;
+    font-size: 100%;
+    padding: 0 7px;
+  }
+  nav a:hover {
+    transition: ease-in-out 0.1s;
+    color: var(--feu-red);
+  }
+  .nav-active:hover {
+    color: var(--feu-dark-green);
+  }
+  .nav-active {
+    background-color: var(--feu-gold);
+    color: var(--feu-dark-green);
+  }
+  
+  /* ===== MAIN CONTENT ===== */
+  .main {
+    height: 600px;
+  }
+  .main-home {
+    height: 1000px;
+  }
+  
+  /* ===== FOOTER ===== */
+  footer {
+    height: 200px;
+  }
+  .footer-content p {
+    font-size: 80%;
+  } 
 }
