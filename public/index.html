@@ -1,129 +1,142 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home | Lost Items Gallery</title>
-    <link rel="icon" type="image/x-icon" href="assets/web_icon.png" id="logo">
-    <link rel="stylesheet" href="common.css">
-    <link rel="stylesheet" href="gallery.css">
+
+    <link rel="icon" type="image/x-icon" href="assets/web_icon.png">
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/gallery.css">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <img src="assets/feu_hs_logo.png" alt="" class="title-img">
-            <img src="assets/feu_hs_laf.png" alt="" class="title-text">
-        </header>
-        <nav>
-            <a href="index.html" class="nav-active"><span>01</span> HOME</a>
-            <a href="report.html"><span class="gold-text">02</span> REPORT</a>
-            <a href=""><span class="gold-text">03</span> HELP</a> <!--pwede dito yung feedback/faq-->
-        </nav>
-        <div class="main-home">
-            <div class="container-gallery">
-                <div class="gallery-header">
-                    <h1>Lost Items Gallery</h1>
-                    <div class="filter-menu">
-                        <input type="checkbox" name="filter" id="filter" hidden>
-                        <label for="filter">
-                            <div class="filter-button">
-                                <h1>Filter</h1> 
-                            </div>
-                        </label>
-                        <div class="filter-main">
-                            <button class="filter-category" data-filter="all">All</button>
-                            <button class="filter-category" data-filter="school">School Supplies</button>
-                            <button class="filter-category" data-filter="personal">Personal Items</button>
-                            <button class="filter-category" data-filter="bag-cont">Bags/Containers</button>
-                            <button class="filter-category" data-filter="electronics">Electronics</button>
-                            <button class="filter-category" data-filter="id-small">Id/Small Valuables</button>
+<div class="container">
+
+    <header>
+        <img src="assets/feu_hs_logo.png" alt="" class="title-img">
+        <img src="assets/feu_hs_laf.png" alt="" class="title-text">
+    </header>
+
+    <nav>
+        <a href="index.html" class="nav-active"><span>01</span> HOME</a>
+        <a href="report.html"><span class="gold-text">02</span> REPORT</a>
+        <a href="#"><span class="gold-text">03</span> HELP</a>
+    </nav>
+
+    <div class="main-home">
+        <div class="container-gallery">
+
+            <div class="gallery-header">
+                <h1>Lost Items Gallery</h1>
+
+                <div class="filter-menu">
+                    <input type="checkbox" id="filter" hidden>
+                    <label for="filter">
+                        <div class="filter-button">
+                            <h1>Filter</h1>
                         </div>
-                    </div>
-                </div>
-                <div class="gallery-main">
-                    <div class="object-item" data-category="personal">
-                        <img src="assets/item/brush.png" alt="item-img">
-                        <h1>Brush</h1>
-                        <div class="item-description">
-                            <p>This is a temporary description for this prototype.</p>
-                        </div>
-                    </div>
-                    <div class="object-item" data-category="school">
-                        <img src="assets/item/calculator.png" alt="item-img">
-                        <h1>Calculator</h1>
-                        <div class="item-description">
-                            <p>This is a temporary description for this prototype.</p>
-                        </div>
-                    </div>
-                    <div class="object-item" data-category="electronics">
-                        <img src="assets/item/camera.png" alt="item-img">
-                        <h1>Camera</h1>
-                        <div class="item-description">
-                            <p>This is a temporary description for this prototype.</p>
-                        </div>
-                    </div>
-                    <div class="object-item" data-category="personal">
-                        <img src="assets/item/coin_purse.png" alt="item-img">
-                        <h1>Coin Purse</h1>
-                        <div class="item-description">
-                            <p>This is a temporary description for this prototype.</p>
-                        </div>
-                    </div>
-                    <div class="object-item" data-category="personal">
-                        <img src="assets/item/handkerchief.png" alt="item-img">
-                        <h1>Handkerchief</h1>
-                        <div class="item-description">
-                            <p>This is a temporary description for this prototype.</p>
-                        </div>
-                    </div>
-                    <div class="object-item" data-category="id-small">
-                        <img src="assets/item/id.png" alt="item-img">
-                        <h1>ID</h1>
-                        <div class="item-description">
-                            <p>This is a temporary description for this prototype.</p>
-                        </div>
-                    </div>
-                    <div class="object-item" data-category="school">
-                        <img src="assets/item/notebook1.png" alt="item-img">
-                        <h1>Notebook</h1>
-                        <div class="item-description">
-                            <p>This is a temporary description for this prototype.</p>
-                        </div>
-                    </div>
-                    <div class="object-item" data-category="school">
-                        <img src="assets/item/notebook2.png" alt="item-img">
-                        <h1>Notebook</h1>
-                        <div class="item-description">
-                            <p>This is a temporary description for this prototype.</p>
-                        </div>
-                    </div>
-                    <div class="object-item" data-category="school">
-                        <img src="assets/item/pencil_case.png" alt="item-img">
-                        <h1>Pencil Case</h1>
-                        <div class="item-description">
-                            <p>This is a temporary description for this prototype.</p>
-                        </div>
-                    </div>
-                    <div class="object-item" data-category="bag-cont">
-                        <img src="assets/item/pouch.png" alt="item-img">
-                        <h1>Pouch</h1>
-                        <div class="item-description">
-                            <p>This is a temporary description for this prototype.</p>
-                        </div>
+                    </label>
+
+                    <div class="filter-main">
+                        <button class="filter-category" data-filter="all">All</button>
+                        <button class="filter-category" data-filter="school">School Supplies</button>
+                        <button class="filter-category" data-filter="personal">Personal Items</button>
+                        <button class="filter-category" data-filter="bag-cont">Bags / Containers</button>
+                        <button class="filter-category" data-filter="electronics">Electronics</button>
+                        <button class="filter-category" data-filter="id-small">ID / Small Valuables</button>
                     </div>
                 </div>
             </div>
+
+            <!-- DYNAMIC GALLERY -->
+            <div class="gallery-main" id="gallery"></div>
+
         </div>
-        <footer>
-            <div class="footer-content">
-                <p>&copy; 2026 FEU Highschool Lost and Found</p>
-                <p>Powered by FEU Tech Team</p>
-            </div>
-        </footer>
     </div>
+
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2026 FEU High School Lost and Found</p>
+            <p>Powered by FEU Tech Team</p>
+        </div>
+    </footer>
+
+</div>
 
 <script src="js/filter.js"></script>
 
+<script>
+async function loadItems() {
+    const gallery = document.getElementById('gallery');
+    gallery.innerHTML = '';
+
+    try {
+        const res = await fetch('/api/items');
+        const items = await res.json();
+
+        items.forEach(item => {
+            if (item.claimed) return;
+
+            const card = document.createElement('div');
+            card.className = 'object-item';
+            card.dataset.category = item.category || 'all';
+
+            card.innerHTML = `
+                <img src="${item.imageUrl || 'assets/item/default.png'}" alt="item">
+                <h1>${item.name}</h1>
+
+                <div class="item-description">
+                    <p>${item.description || 'No description provided.'}</p>
+                    <p><strong>Location:</strong> ${item.locationFound || 'Unknown'}</p>
+                </div>
+
+                <button class="claim-btn" data-id="${item._id}">
+                    Claim Item
+                </button>
+            `;
+
+            gallery.appendChild(card);
+        });
+    } catch (err) {
+        gallery.innerHTML = '<p>Error loading items.</p>';
+    }
+}
+
+/* CLAIM ITEM */
+document.getElementById('gallery').addEventListener('click', async (e) => {
+    if (!e.target.classList.contains('claim-btn')) return;
+
+    const id = e.target.dataset.id;
+
+    const secretDetail = prompt('Enter a secret detail only the owner knows:');
+    if (!secretDetail) return;
+
+    const color = prompt('Color (optional):') || '';
+    const size = prompt('Size (optional):') || '';
+    const shape = prompt('Shape (optional):') || '';
+
+    try {
+        const res = await fetch(`/api/claim/${id}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ secretDetail, color, size, shape })
+        });
+
+        const result = await res.json();
+
+        if (result.success) {
+            alert(`✅ Match successful (${Math.round(result.score * 100)}%)`);
+            loadItems();
+        } else {
+            alert(`❌ Not a match (${Math.round((result.score || 0) * 100)}%)`);
+        }
+    } catch (err) {
+        alert('Error claiming item.');
+    }
+});
+
+loadItems();
+</script>
+
 </body>
 </html>
-
-<!--*Lagyan mo ng bg image para angas (feu image)-->
