@@ -1,65 +1,129 @@
-<!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>Report Lost Item</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home | Lost Items Gallery</title>
+    <link rel="icon" type="image/x-icon" href="assets/web_icon.png" id="logo">
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/gallery.css">
 </head>
 <body>
-  <h1>Report Lost Item</h1>
-  <form id="reportForm">
-    <input name="itemName" placeholder="Item name" required><br>
-    <textarea name="description" placeholder="Description"></textarea><br>
-    <input name="color" placeholder="Color"><br>
-    <input name="size" placeholder="Size"><br>
-    <input name="shape" placeholder="Shape"><br>
-    <input name="locationLost" placeholder="Where was it lost?" required><br>
-    <input name="secretDetail" placeholder="Secret detail (only you know)" required><br>
-    <input name="contact" placeholder="Contact (optional)"><br>
-    <button type="submit">Submit Report</button>
-  </form>
+    <div class="container">
+        <header>
+            <img src="assets/feu_hs_logo.png" alt="" class="title-img">
+            <img src="assets/feu_hs_laf.png" alt="" class="title-text">
+        </header>
+        <nav>
+            <a href="index.html" class="nav-active"><span>01</span> HOME</a>
+            <a href="report.html"><span class="gold-text">02</span> REPORT</a>
+            <a href=""><span class="gold-text">03</span> HELP</a> <!--pwede dito yung feedback/faq-->
+        </nav>
+        <div class="main-home">
+            <div class="container-gallery">
+                <div class="gallery-header">
+                    <h1>Lost Items Gallery</h1>
+                    <div class="filter-menu">
+                        <input type="checkbox" name="filter" id="filter" hidden>
+                        <label for="filter">
+                            <div class="filter-button">
+                                <h1>Filter</h1> 
+                            </div>
+                        </label>
+                        <div class="filter-main">
+                            <button class="filter-category" data-filter="all">All</button>
+                            <button class="filter-category" data-filter="school">School Supplies</button>
+                            <button class="filter-category" data-filter="personal">Personal Items</button>
+                            <button class="filter-category" data-filter="bag-cont">Bags/Containers</button>
+                            <button class="filter-category" data-filter="electronics">Electronics</button>
+                            <button class="filter-category" data-filter="id-small">Id/Small Valuables</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="gallery-main">
+                    <div class="object-item" data-category="personal">
+                        <img src="assets/item/brush.png" alt="item-img">
+                        <h1>Brush</h1>
+                        <div class="item-description">
+                            <p>This is a temporary description for this prototype.</p>
+                        </div>
+                    </div>
+                    <div class="object-item" data-category="school">
+                        <img src="assets/item/calculator.png" alt="item-img">
+                        <h1>Calculator</h1>
+                        <div class="item-description">
+                            <p>This is a temporary description for this prototype.</p>
+                        </div>
+                    </div>
+                    <div class="object-item" data-category="electronics">
+                        <img src="assets/item/camera.png" alt="item-img">
+                        <h1>Camera</h1>
+                        <div class="item-description">
+                            <p>This is a temporary description for this prototype.</p>
+                        </div>
+                    </div>
+                    <div class="object-item" data-category="personal">
+                        <img src="assets/item/coin_purse.png" alt="item-img">
+                        <h1>Coin Purse</h1>
+                        <div class="item-description">
+                            <p>This is a temporary description for this prototype.</p>
+                        </div>
+                    </div>
+                    <div class="object-item" data-category="personal">
+                        <img src="assets/item/handkerchief.png" alt="item-img">
+                        <h1>Handkerchief</h1>
+                        <div class="item-description">
+                            <p>This is a temporary description for this prototype.</p>
+                        </div>
+                    </div>
+                    <div class="object-item" data-category="id-small">
+                        <img src="assets/item/id.png" alt="item-img">
+                        <h1>ID</h1>
+                        <div class="item-description">
+                            <p>This is a temporary description for this prototype.</p>
+                        </div>
+                    </div>
+                    <div class="object-item" data-category="school">
+                        <img src="assets/item/notebook1.png" alt="item-img">
+                        <h1>Notebook</h1>
+                        <div class="item-description">
+                            <p>This is a temporary description for this prototype.</p>
+                        </div>
+                    </div>
+                    <div class="object-item" data-category="school">
+                        <img src="assets/item/notebook2.png" alt="item-img">
+                        <h1>Notebook</h1>
+                        <div class="item-description">
+                            <p>This is a temporary description for this prototype.</p>
+                        </div>
+                    </div>
+                    <div class="object-item" data-category="school">
+                        <img src="assets/item/pencil_case.png" alt="item-img">
+                        <h1>Pencil Case</h1>
+                        <div class="item-description">
+                            <p>This is a temporary description for this prototype.</p>
+                        </div>
+                    </div>
+                    <div class="object-item" data-category="bag-cont">
+                        <img src="assets/item/pouch.png" alt="item-img">
+                        <h1>Pouch</h1>
+                        <div class="item-description">
+                            <p>This is a temporary description for this prototype.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <footer>
+            <div class="footer-content">
+                <p>&copy; 2026 FEU Highschool Lost and Found</p>
+                <p>Powered by FEU Tech Team</p>
+            </div>
+        </footer>
+    </div>
 
-  <div id="matches"></div>
-  <p id="msg"></p>
+<script src="js/filter.js"></script>
 
-  <script>
-    const form = document.getElementById('reportForm');
-    const matchesDiv = document.getElementById('matches');
-    const msg = document.getElementById('msg');
-
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      msg.textContent = '';
-      matchesDiv.innerHTML = '';
-      const data = Object.fromEntries(new FormData(form).entries());
-      try {
-        const res = await fetch('/api/report', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data)
-        });
-        const json = await res.json();
-        if (res.ok) {
-          msg.textContent = json.message || 'Report saved';
-          if (json.matches && json.matches.length) {
-            matchesDiv.innerHTML = '<h3>Possible matches</h3>';
-            json.matches.forEach(m => {
-              const div = document.createElement('div');
-              div.className = 'match';
-              div.innerHTML = `<img src="${m.imageUrl || ''}" alt="${m.name || ''}" width="120"><strong>${m.name}</strong> (${Math.round(m.score*100)}%) <p>${m.description || ''}</p>`;
-              matchesDiv.appendChild(div);
-            });
-          } else {
-            matchesDiv.textContent = 'No close matches found.';
-          }
-          form.reset();
-        } else {
-          msg.textContent = json.error || 'Failed';
-        }
-      } catch (err) {
-        msg.textContent = 'Error: ' + err.message;
-      }
-    });
-  </script>
 </body>
 </html>
+
+<!--*Lagyan mo ng bg image para angas (feu image)-->
