@@ -8,7 +8,7 @@ const FoundItemSchema = new mongoose.Schema({
   shape: String,
   locationFound: String,
   imageUrl: String,
-  SecretDetail: String,
+  secretDetail: String,
   dateFound: { type: Date, default: Date.now },
   claimed: { type: Boolean, default: false }
 });
