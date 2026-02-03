@@ -81,7 +81,7 @@ app.get("/api/items", async (req, res) => {
 
 app.post("/api/admin/add-found", upload.single("image"), async (req, res) => {
   try {
-    const { adminSecret, name, description, color, size, shape, locationFound } = req.body;
+    const { adminSecret, name, description, color, size, shape, locationFound, secretDetail } = req.body;
     if (adminSecret !== process.env.ADMIN_SECRET) return res.status(401).json({ message: "Unauthorized" });
 
     let imageUrl = "";
@@ -97,7 +97,7 @@ app.post("/api/admin/add-found", upload.single("image"), async (req, res) => {
       size: size || "",
       shape: shape || "",
       locationFound: locationFound || "",
-      SecretDetail: SecretDetail || "",
+      SecretDetail: secretDetail || "",
       imageUrl
     });
     await newItem.save();
@@ -169,7 +169,7 @@ function computeMatchesAgainstFound(foundItems, lostItem) {
     return { item: fi, score };
   });
   results.sort((a,b)=> b.score - a.score);
-  return results.slice(0,3).map(r => ({ id: r.item._id, name: r.item.name, score: r.score, imageUrl: r.item.imageUrl, locationFound: r.item.locationFound, description: r.item.description }));
+  return results.slice(0,3).map(r => ({ id: r.item._id, name: r.item.name, score: r.score, imageUrl: r.item.imageUrl, locationFound: r.item.locationFound, secretDetail: r.item.secretDetail, description: r.item.description }));
 }
 
 const PORT = process.env.PORT || 10000;
