@@ -114,9 +114,6 @@ app.post("/api/claim/:id", async (req, res) => {
 
     const item = await FoundItem.findById(itemId);
     if (!item) return res.status(404).json({ success: false, message: "Item not found" });
-    .lowercase {
-            text-transform: lowercase; secretDetail, color, size, shape
-        }
     const score = computeClaimScore(item, { secretDetail, color, size, shape });
 
     const threshold = Number(process.env.MATCH_THRESHOLD || 0.75);
@@ -148,15 +145,17 @@ function uploadBufferToCloudinary(buffer, folder) {
 
 function computeClaimScore(foundItem, claimData) {
   const weights = { secret: 0.5, color: 0.15, size: 0.15, shape: 0.2 };
+  const normalize = (text) => (text || "").toString().toLowerCase().trim();
   const secretScore = stringSimilarity.compareTwoStrings(
     (foundItem.description || "") + " " + (foundItem.name || ""),
     claimData.secretDetail || ""
   );
+  
   const colorScore = stringSimilarity.compareTwoStrings((foundItem.color || ""), (claimData.color || ""));
   const sizeScore = stringSimilarity.compareTwoStrings((foundItem.size || ""), (claimData.size || ""));
   const shapeScore = stringSimilarity.compareTwoStrings((foundItem.shape || ""), (claimData.shape || ""));
 
-  const overall = secretScore * weights.secret + colorScore * weights.color + sizeScore * weights.size + shapeScore * weights.shape;
+  const overall = secretScore * weights.secretDetail + colorScore * weights.color + sizeScore * weights.size + shapeScore * weights.shape;
   return overall;
 }
 
