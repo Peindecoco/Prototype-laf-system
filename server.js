@@ -155,7 +155,7 @@ function computeClaimScore(foundItem, claimData) {
   const sizeScore = stringSimilarity.compareTwoStrings((foundItem.size || ""), (claimData.size || ""));
   const shapeScore = stringSimilarity.compareTwoStrings((foundItem.shape || ""), (claimData.shape || ""));
 
-  const overall = secretScore * weights.secretDetail + colorScore * weights.color + sizeScore * weights.size + shapeScore * weights.shape;
+  const overall = secretScore * weights.secret + colorScore * weights.color + sizeScore * weights.size + shapeScore * weights.shape;
   return overall;
 }
 
