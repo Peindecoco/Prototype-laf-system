@@ -97,7 +97,7 @@ app.post("/api/admin/add-found", upload.single("image"), async (req, res) => {
       size: size || "",
       shape: shape || "",
       locationFound: locationFound || "",
-      SecretDetail: secretDetail || "",
+      secretDetail: secretDetail || "",
       imageUrl
     });
     await newItem.save();
