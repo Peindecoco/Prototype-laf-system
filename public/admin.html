@@ -1,48 +1,96 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>Admin - Add Found Item</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <h1>Admin - Add Found Item</h1>
-  <form id="adminForm" enctype="multipart/form-data">
-    <input name="adminSecret" placeholder="Admin secret" required><br>
-    <input name="name" placeholder="Item name" required><br>
-    <input name="description" placeholder="Description"><br>
-    <input name="color" placeholder="Color"><br>
-    <input name="size" placeholder="Size"><br>
-    <input name="shape" placeholder="Shape"><br>
-    <input name="locationFound" placeholder="Location found"><br>
-    <input type="file" name="image" accept="image/*"><br>
-    <button type="submit">Add Found Item</button>
-  </form>
-  <p id="msg"></p>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin | FEU Lost & Found</title>
 
+  <link rel="icon" type="image/x-icon" href="assets/web_icon.png">
+  <link rel="stylesheet" href="css/common.css">
+  <link rel="stylesheet" href="css/report_sheet.css">
+</head>
+
+<body>
+  <div class="container">
+
+    <!-- HEADER -->
+    <header>
+      <img src="assets/feu_hs_logo.png" alt="FEU Logo" class="title-img">
+      <img src="assets/feu_hs_laf.png" alt="Lost and Found" class="title-text">
+    </header>
+
+    <!-- NAVIGATION -->
+    <nav>
+      <a href="index.html"><span class="gold-text">01</span> HOME</a>
+      <a href="report.html"><span class="gold-text">02</span> REPORT</a>
+      <a href="#"><span class="gold-text">03</span> HELP</a>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-admin">
+      <div class="report-sheet-admin">
+        <h1>Admin | Add Found Item</h1>
+
+        <form class="report-form" id="adminForm" enctype="multipart/form-data">
+
+          <input name="adminSecret" placeholder="Admin Secret" required>
+
+          <input name="name" placeholder="Item Name" required>
+          <input name="description" placeholder="Description" required>
+          <input name="color" placeholder="Color">
+          <input name="size" placeholder="Size">
+          <input name="shape" placeholder="Shape">
+          <input name="locationFound" placeholder="Location Found">
+
+          <input type="file" name="image" accept="image/*">
+
+          <button type="submit" class="btn">Submit</button>
+        </form>
+
+        <p id="msg"></p>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+      <div class="footer-content">
+        <p>&copy; 2026 FEU High School Lost and Found</p>
+        <p>Powered by FEU Tech Team</p>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- SCRIPT -->
   <script>
     const form = document.getElementById('adminForm');
     const msg = document.getElementById('msg');
+
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       msg.textContent = '';
+
       const formData = new FormData(form);
+
       try {
         const res = await fetch('/api/admin/add-found', {
           method: 'POST',
           body: formData
         });
+
         const json = await res.json();
+
         if (res.ok) {
-          msg.textContent = json.message || 'Added';
+          msg.textContent = json.message || 'Item added successfully';
           form.reset();
         } else {
-          msg.textContent = json.error || json.message || 'Failed';
+          msg.textContent = json.error || json.message || 'Upload failed';
         }
       } catch (err) {
         msg.textContent = 'Error: ' + err.message;
       }
     });
   </script>
+
 </body>
 </html>
