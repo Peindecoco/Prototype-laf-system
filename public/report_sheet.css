@@ -1,0 +1,112 @@
+/* ===== FEU INSPIRED GLOBAL STYLE ===== */
+:root {
+  --feu-green: #008248;
+  --feu-light-green: #00AB5F;
+  --feu-dark-green: #084c2a;
+  --feu-gold: #f4c430;
+  --feu-red: #F30006;
+  --light-bg: #f5f7f6;
+  --text-dark: #1f2933;
+  --text-gray: #808080;
+}
+.dark-green-text {
+  color: var(--feu-dark-green);
+}
+.gold-text {
+  color: var(--feu-gold);
+}
+.red-text {
+  color: var(--feu-red);
+}
+
+/* ===== REPORT SHEET ===== */
+.report-sheet {
+  height: 550px;
+  background-color: color-mix(in srgb, var(--light-bg) 30%, transparent);
+  border-radius: 12px;
+  width: 700px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
+  padding: 0 30px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  gap: 20px;
+  backdrop-filter: blur(5px);
+}
+.report-sheet-admin {
+  height: 600px;
+  background-color: color-mix(in srgb, var(--light-bg) 30%, transparent);
+  border-radius: 12px;
+  width: 700px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
+  padding: 0 30px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  gap: 20px;
+  backdrop-filter: blur(5px);
+}
+.report-form {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+.report-form button {
+  width: 250px;
+}
+
+/* ===== FORMS ===== */
+input,
+select,
+textarea {
+  width: 100%;
+  padding: 0.6rem;
+  border-radius: 6px;
+  border: 1px solid #cbd5e0;
+}
+input:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--feu-green);
+}
+
+/* ===== BUTTONS ===== */
+.btn {
+  background-color: var(--feu-green);
+  color: white;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.1s ease;
+}
+.btn:hover {
+  background-color: var(--feu-gold);
+  scale: calc(1.1);
+}
+.btn:active {
+  scale: calc(1);
+}
+
+@media (max-width: 800px) or (max-height: 500px) {
+
+  /* ===== REPORT SHEET ===== */
+  .report-sheet {
+    border-radius: 0;
+    width: 100%;
+  }
+  .report-sheet-admin {
+    border-radius: 0;
+    width: 100%;
+  }
+  .report-form {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+  }
+  .report-form button {
+    width: 250px;
+  }
+}
