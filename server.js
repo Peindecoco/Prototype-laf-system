@@ -114,7 +114,9 @@ app.post("/api/claim/:id", async (req, res) => {
 
     const item = await FoundItem.findById(itemId);
     if (!item) return res.status(404).json({ success: false, message: "Item not found" });
-
+    .lowercase {
+            text-transform: lowercase; secretDetail, color, size, shape
+        }
     const score = computeClaimScore(item, { secretDetail, color, size, shape });
 
     const threshold = Number(process.env.MATCH_THRESHOLD || 0.75);
