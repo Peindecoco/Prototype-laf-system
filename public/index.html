@@ -88,13 +88,13 @@ async function loadItems() {
                 <div class="item-description">
                     <p>${item.description || 'No description provided.'}</p>
                     <p><strong>Location:</strong> ${item.locationFound || 'Unknown'}</p>
-                </div>
+                
 
                 <button class="claim-btn" data-id="${item._id}">
                     Claim Item
                 </button>
             `;
-
+                      </div>
             gallery.appendChild(card);
         });
     } catch (err) {
