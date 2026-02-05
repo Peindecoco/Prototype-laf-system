@@ -94,14 +94,14 @@ async function loadItems() {
                     Claim Item
                 </button>
             `;
-                      </div>
+                      
             gallery.appendChild(card);
         });
     } catch (err) {
         gallery.innerHTML = '<p>Error loading items.</p>';
     }
 }
-
+</div>
 /* CLAIM ITEM */
 document.getElementById('gallery').addEventListener('click', async (e) => {
     if (!e.target.classList.contains('claim-btn')) return;
