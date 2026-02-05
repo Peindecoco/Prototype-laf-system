@@ -101,7 +101,7 @@ async function loadItems() {
         gallery.innerHTML = '<p>Error loading items.</p>';
     }
 }
-</div>
+
 /* CLAIM ITEM */
 document.getElementById('gallery').addEventListener('click', async (e) => {
     if (!e.target.classList.contains('claim-btn')) return;
@@ -136,6 +136,7 @@ document.getElementById('gallery').addEventListener('click', async (e) => {
 });
 
 loadItems();
+</div>
 </script>
 
 </body>
