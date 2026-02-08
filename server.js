@@ -1,9 +1,3 @@
- (cd "$(git rev-parse --show-toplevel)" && git apply --3way <<'EOF' 
-diff --git a/server.js b/server.js
-index 0489c0d7c9fdeade4e9e4b4e9329dd478fbf9b66..c963c39936ef739522c143e201060f187802399f 100644
---- a/server.js
-+++ b/server.js
-@@ -1,63 +1,66 @@
  import express from "express";
  import mongoose from "mongoose";
  import dotenv from "dotenv";
