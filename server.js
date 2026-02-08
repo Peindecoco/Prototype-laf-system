@@ -1,108 +1,109 @@
- import express from "express";
- import mongoose from "mongoose";
- import dotenv from "dotenv";
- import cors from "cors";
- import multer from "multer";
- import streamifier from "streamifier";
- import cloudinary from "cloudinary";
- import stringSimilarity from "string-similarity";
- import path from "path";
- import { fileURLToPath } from "url";
- import LostItem from "./models/LostItem.js";
- import FoundItem from "./models/FoundItem.js";
- import OpenAI from "openai";
- 
- dotenv.config();
- 
- const app = express();
- app.use(cors());
- app.use(express.json());
- app.use(express.urlencoded({ extended: true }));
- app.use(express.static("public"));
- 
- const __filename = fileURLToPath(import.meta.url);
- const __dirname = path.dirname(__filename);
- 
- mongoose.connect(process.env.MONGODB_URI, {
-   useNewUrlParser: true,
-   useUnifiedTopology: true
- })
- .then(()=> console.log("✅ MongoDB connected"))
- .catch(err => console.error("❌ MongoDB connection failed:", err.message));
- 
- cloudinary.v2.config({
-   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-   api_key: process.env.CLOUDINARY_API_KEY,
-   api_secret: process.env.CLOUDINARY_API_SECRET
- });
- 
- const upload = multer(); // in-memory
- const OPENAI_MODEL = process.env.OPENAI_MODEL || "gpt-4o-mini";
- const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
- 
- app.post("/api/report", async (req, res) => {
-   try {
-     const body = req.body;
-     const lost = new LostItem({
-       itemName: body.itemName || "",
-       description: body.description || "",
-       color: body.color || "",
-       size: body.size || "",
-       shape: body.shape || "",
-       locationLost: body.locationLost || "",
-       secretDetail: body.secretDetail || "",
-       contact: body.contact || ""
-     });
-     await lost.save();
- 
-     // After storing, we can also compute possible matches (found items) and return them
-     const foundItems = await FoundItem.find();
-     const matches = computeMatchesAgainstFound(foundItems, lost);
-     res.status(201).json({ message: "Report saved", matches });
-   } catch (err) {
-     res.status(500).json({ error: err.message });
-   }
- });
- 
-     if (req.file && req.file.buffer) {
-       const uploadResult = await uploadBufferToCloudinary(req.file.buffer, "feu_lost_found");
-       imageUrl = uploadResult.secure_url;
-     }
- 
-     const newItem = new FoundItem({
-       name: name || "",
-       description: description || "",
-       color: color || "",
-       size: size || "",
-       shape: shape || "",
-       locationFound: locationFound || "",
-       secretDetail: secretDetail || "",
-       imageUrl
-     });
-     await newItem.save();
-     res.status(201).json({ message: "Found item added" });
-   } catch (err) {
-     res.status(500).json({ error: err.message });
-   }
- });
- 
- app.post("/api/claim/:id", async (req, res) => {
-   try {
-     const itemId = req.params.id;
+import express from "express";
+import mongoose from "mongoose";
+import dotenv from "dotenv";
+import cors from "cors";
+import multer from "multer";
+import streamifier from "streamifier";
+import cloudinary from "cloudinary";
+import stringSimilarity from "string-similarity";
+import path from "path";
+import { fileURLToPath } from "url";
+import LostItem from "./models/LostItem.js";
+import FoundItem from "./models/FoundItem.js";
+import OpenAI from "openai";
+
+dotenv.config();
+
+const app = express();
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static("public"));
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+mongoose.connect(process.env.MONGODB_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+.then(()=> console.log("✅ MongoDB connected"))
+.catch(err => console.error("❌ MongoDB connection failed:", err.message));
+
+cloudinary.v2.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
+
+const upload = multer(); // in-memory
+const OPENAI_MODEL = process.env.OPENAI_MODEL || "gpt-4o-mini";
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
+app.post("/api/report", async (req, res) => {
+  try {
+    const body = req.body;
+    const lost = new LostItem({
+      itemName: body.itemName || "",
+      description: body.description || "",
+      color: body.color || "",
+      size: body.size || "",
+      shape: body.shape || "",
+      locationLost: body.locationLost || "",
+      secretDetail: body.secretDetail || "",
+      contact: body.contact || ""
+    });
+    await lost.save();
+
+    // After storing, we can also compute possible matches (found items) and return them
+    const foundItems = await FoundItem.find();
+    const matches = computeMatchesAgainstFound(foundItems, lost);
+    res.status(201).json({ message: "Report saved", matches });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+@@ -88,90 +91,209 @@ app.post("/api/admin/add-found", upload.single("image"), async (req, res) => {
+    if (req.file && req.file.buffer) {
+      const uploadResult = await uploadBufferToCloudinary(req.file.buffer, "feu_lost_found");
+      imageUrl = uploadResult.secure_url;
+    }
+
+    const newItem = new FoundItem({
+      name: name || "",
+      description: description || "",
+      color: color || "",
+      size: size || "",
+      shape: shape || "",
+      locationFound: locationFound || "",
+      secretDetail: secretDetail || "",
+      imageUrl
+    });
+    await newItem.save();
+    res.status(201).json({ message: "Found item added" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post("/api/claim/:id", async (req, res) => {
+  try {
+    const itemId = req.params.id;
     const { secretDetail, color, size, shape, claimDescription, claimantName, claimantContact } = req.body;
- 
-     const item = await FoundItem.findById(itemId);
-     if (!item) return res.status(404).json({ success: false, message: "Item not found" });
+
+    const item = await FoundItem.findById(itemId);
+    if (!item) return res.status(404).json({ success: false, message: "Item not found" });
     const claimData = { secretDetail, color, size, shape, claimDescription, claimantName, claimantContact };
     const fallbackScore = computeClaimScore(item, claimData);
 
     const aiResult = await computeClaimScoreWithChatGPT(item, claimData);
     const score = aiResult.score;
- 
-     const threshold = Number(process.env.MATCH_THRESHOLD || 0.75);
-     if (score >= threshold) {
-       item.claimed = true;
-       await item.save();
+
+    const threshold = Number(process.env.MATCH_THRESHOLD || 0.75);
+    if (score >= threshold) {
+      item.claimed = true;
+      await item.save();
       return res.json({
         success: true,
         score,
@@ -111,7 +112,7 @@
         rationale: aiResult.rationale,
         message: "Match success — item marked claimed"
       });
-     } else {
+    } else {
       return res.json({
         success: false,
         score,
@@ -121,28 +122,29 @@
         fallbackScore,
         message: "Not a close enough match"
       });
-     }
-   } 
- 
- app.get("/", (req, res) => {
-   res.sendFile(path.join(__dirname, "public", "index.html"));
- });
- 
- function uploadBufferToCloudinary(buffer, folder) {
-   return new Promise((resolve, reject) => {
-     const stream = cloudinary.v2.uploader.upload_stream({ folder }, (error, result) => {
-       if (result) resolve(result);
-       else reject(error);
-     });
-     streamifier.createReadStream(buffer).pipe(stream);
-   });
- }
- 
- function computeClaimScore(foundItem, claimData) {
+    }
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
 
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
+
+function uploadBufferToCloudinary(buffer, folder) {
+  return new Promise((resolve, reject) => {
+    const stream = cloudinary.v2.uploader.upload_stream({ folder }, (error, result) => {
+      if (result) resolve(result);
+      else reject(error);
+    });
+    streamifier.createReadStream(buffer).pipe(stream);
+  });
+}
+
+function computeClaimScore(foundItem, claimData) {
   const weights = { secret: 0.55, color: 0.15, size: 0.1, shape: 0.1, context: 0.1 };
-   const normalize = (text) => (text || "").toString().toLowerCase().trim();
-
+  const normalize = (text) => (text || "").toString().toLowerCase().trim();
 
   const foundSecretCorpus = normalize([
     foundItem.secretDetail,
@@ -254,24 +256,21 @@ function extractJson(text) {
   const last = trimmed.lastIndexOf("}");
   if (first >= 0 && last > first) return trimmed.slice(first, last + 1);
   return "{}";
- }
- 
- function computeMatchesAgainstFound(foundItems, lostItem) {
-   const results = foundItems.map(fi => {
-     const score = computeClaimScore(fi, {
-       secretDetail: lostItem.secretDetail,
-       color: lostItem.color,
-       size: lostItem.size,
-       shape: lostItem.shape
-     });
-     return { item: fi, score };
-   });
-   results.sort((a,b)=> b.score - a.score);
-   return results.slice(0,3).map(r => ({ id: r.item._id, name: r.item.name, score: r.score, imageUrl: r.item.imageUrl, locationFound: r.item.locationFound, secretDetail: r.item.secretDetail, description: r.item.description }));
- }
- 
- const PORT = process.env.PORT || 10000;
- app.listen(PORT, () => console.log(`🚀 Server listening on port ${PORT}`));
- 
-EOF
-)
+}
+
+function computeMatchesAgainstFound(foundItems, lostItem) {
+  const results = foundItems.map(fi => {
+    const score = computeClaimScore(fi, {
+      secretDetail: lostItem.secretDetail,
+      color: lostItem.color,
+      size: lostItem.size,
+      shape: lostItem.shape
+    });
+    return { item: fi, score };
+  });
+  results.sort((a,b)=> b.score - a.score);
+  return results.slice(0,3).map(r => ({ id: r.item._id, name: r.item.name, score: r.score, imageUrl: r.item.imageUrl, locationFound: r.item.locationFound, secretDetail: r.item.secretDetail, description: r.item.description }));
+}
+
+const PORT = process.env.PORT || 10000;
+app.listen(PORT, () => console.log(`🚀 Server listening on port ${PORT}`));
