@@ -37,8 +37,8 @@
  });
  
  const upload = multer(); // in-memory
-+const OPENAI_MODEL = process.env.OPENAI_MODEL || "gpt-4o-mini";
-+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+ const OPENAI_MODEL = process.env.OPENAI_MODEL || "gpt-4o-mini";
+ const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
  
  app.post("/api/report", async (req, res) => {
    try {
