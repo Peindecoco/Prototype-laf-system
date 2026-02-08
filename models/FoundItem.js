@@ -10,7 +10,23 @@ const FoundItemSchema = new mongoose.Schema({
   imageUrl: String,
   secretDetail: String,
   dateFound: { type: Date, default: Date.now },
-  claimed: { type: Boolean, default: false }
+  claimed: { type: Boolean, default: false },
+  claimantName: { type: String, default: "" },
+  claimantContact: { type: String, default: "" },
+  claimDate: { type: Date },
+  claimRequests: [{
+    claimantName: { type: String, default: "" },
+    claimantContact: { type: String, default: "" },
+    secretDetail: { type: String, default: "" },
+    claimDescription: { type: String, default: "" },
+    color: { type: String, default: "" },
+    size: { type: String, default: "" },
+    shape: { type: String, default: "" },
+    score: { type: Number, default: 0 },
+    source: { type: String, default: "" },
+    claimable: { type: Boolean, default: false },
+    createdAt: { type: Date, default: Date.now }
+  }]
 });
 
 export default mongoose.model("FoundItem", FoundItemSchema);
