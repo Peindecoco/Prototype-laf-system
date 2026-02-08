@@ -64,7 +64,6 @@ app.post("/api/report", async (req, res) => {
   }
 });
 
-@@ -88,90 +91,209 @@ app.post("/api/admin/add-found", upload.single("image"), async (req, res) => {
     if (req.file && req.file.buffer) {
       const uploadResult = await uploadBufferToCloudinary(req.file.buffer, "feu_lost_found");
       imageUrl = uploadResult.secure_url;
@@ -82,7 +81,7 @@ app.post("/api/report", async (req, res) => {
     });
     await newItem.save();
     res.status(201).json({ message: "Found item added" });
-  } catch (err) {
+   catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
