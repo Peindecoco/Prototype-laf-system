@@ -116,6 +116,11 @@ document.getElementById('gallery').addEventListener('click', async (e) => {
         return;
     }
 
+    if (!secretDetail && !claimDescription) {
+        alert('Please provide at least a secret detail or identifying description.');
+        return;
+    }
+
     const claimantName = (prompt('Your name (optional):') || '').trim();
     const claimantContact = (prompt('Your contact (optional):') || '').trim();
     const color = (prompt('Color (optional):') || '').trim();
