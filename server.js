@@ -122,10 +122,7 @@
         message: "Not a close enough match"
       });
      }
-   } catch (err) {
-     res.status(500).json({ success: false, error: err.message });
-   }
- });
+   } 
  
  app.get("/", (req, res) => {
    res.sendFile(path.join(__dirname, "public", "index.html"));
