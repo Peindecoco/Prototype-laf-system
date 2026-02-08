@@ -64,7 +64,6 @@
    }
  });
  
-@@ -88,90 +91,209 @@ app.post("/api/admin/add-found", upload.single("image"), async (req, res) => {
      if (req.file && req.file.buffer) {
        const uploadResult = await uploadBufferToCloudinary(req.file.buffer, "feu_lost_found");
        imageUrl = uploadResult.secure_url;
