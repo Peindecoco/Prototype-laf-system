@@ -88,8 +88,8 @@ async function loadItems() {
                 <div class="item-description">
                     <p>${item.description || 'No description provided.'}</p>
                     <p><strong>Location:</strong> ${item.locationFound || 'Unknown'}</p>
+                </div>
                 
-
                 <button class="claim-btn" data-id="${item._id}">
                     Claim Item
                 </button>
@@ -108,27 +108,42 @@ document.getElementById('gallery').addEventListener('click', async (e) => {
 
     const id = e.target.dataset.id;
 
-    const secretDetail = prompt('Enter a secret detail only the owner knows:');
-    if (!secretDetail) return;
+    const secretDetail = (prompt('Enter a secret detail only the owner knows:') || '').trim();
+    const claimDescription = (prompt('Describe additional proof (brand, markings, exact contents, etc.):') || '').trim();
 
-    const color = prompt('Color (optional):') || '';
-    const size = prompt('Size (optional):') || '';
-    const shape = prompt('Shape (optional):') || '';
+    if (!secretDetail && !claimDescription) {
+        alert('Please provide at least a secret detail or identifying description.');
+        return;
+    }
+
+    const claimantName = (prompt('Your name (optional):') || '').trim();
+    const claimantContact = (prompt('Your contact (optional):') || '').trim();
+    const color = (prompt('Color (optional):') || '').trim();
+    const size = (prompt('Size (optional):') || '').trim();
+    const shape = (prompt('Shape (optional):') || '').trim();
 
     try {
         const res = await fetch(`/api/claim/${id}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ secretDetail, color, size, shape })
+            body: JSON.stringify({
+                secretDetail,
+                claimDescription,
+                claimantName,
+                claimantContact,
+                color,
+                size,
+                shape
+            })
         });
 
         const result = await res.json();
 
         if (result.success) {
-            alert(`✅ Match successful (${Math.round(result.score * 100)}%)`);
+            alert(`✅ Match successful (${Math.round(result.score * 100)}%).\n${result.rationale || ''}`);
             loadItems();
         } else {
-            alert(`❌ Not a match (${Math.round((result.score || 0) * 100)}%)`);
+            alert(`❌ Not a match (${Math.round((result.score || 0) * 100)}%).\n${result.rationale || 'Please provide more accurate details and try again.'}`);
         }
     } catch (err) {
         alert('Error claiming item.');
