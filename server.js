@@ -131,33 +131,56 @@
      const item = await FoundItem.findById(itemId);
      if (!item) return res.status(404).json({ success: false, message: "Item not found" });
      const claimData = { secretDetail, color, size, shape, claimDescription, claimantName, claimantContact };
-     const fallbackScore = computeClaimScore(item, claimData);
+     const sanitizedClaimantName = (claimantName || "").toString().trim();
+     const sanitizedClaimantContact = (claimantContact || "").toString().trim();
+     const fallbackScore = computeClaimScore(item, claimData);;
  
      const aiResult = await computeClaimScoreWithChatGPT(item, claimData);
      const score = aiResult.score;
  
      const threshold = Number(process.env.MATCH_THRESHOLD || 0.75);
-     if (score >= threshold) {
-       item.claimed = true;
+     const claimable = score >= threshold;
+
+     item.claimRequests = item.claimRequests || [];
+     item.claimRequests.push({
+       claimantName: sanitizedClaimantName,
+       claimantContact: sanitizedClaimantContact,
+       secretDetail: (secretDetail || "").toString(),
+       claimDescription: (claimDescription || "").toString(),
+       color: (color || "").toString(),
+       size: (size || "").toString(),
+       shape: (shape || "").toString(),
+       score,
+       source: aiResult.source,
+       claimable,
+       createdAt: new Date()
+    });
+
+    if (claimable) {
+      item.claimed = true;
+      item.claimantName = sanitizedClaimantName;
+      item.claimantContact = sanitizedClaimantContact;
+      item.claimDate = new Date();
        await item.save();
        return res.json({
-         success: true,
-         score,
-         threshold,
-         source: aiResult.source,
-         rationale: aiResult.rationale,
-         message: "Match success — item marked claimed"
-       });
+        success: true,
+        score,
+        threshold,
+        source: aiResult.source,
+        rationale: aiResult.rationale,
+        message: "Match success — item marked claimed"
+      });
      } else {
-       return res.json({
-         success: false,
-         score,
-         threshold,
-         source: aiResult.source,
-         rationale: aiResult.rationale,
-         fallbackScore,
-         message: "Not a close enough match"
-       });
+      await item.save();
+      return res.json({
+        success: false,
+        score,
+        threshold,
+        source: aiResult.source,
+        rationale: aiResult.rationale,
+        fallbackScore,
+        message: "Not a close enough match"
+      });
      }
    } catch (err) {
      res.status(500).json({ success: false, error: err.message });
@@ -182,117 +205,116 @@
    const weights = { secret: 0.55, color: 0.15, size: 0.1, shape: 0.1, context: 0.1 };
    const normalize = (text) => (text || "").toString().toLowerCase().trim();
 
+ const foundSecretCorpus = normalize([
+    foundItem.secretDetail,
+    foundItem.description,
+    foundItem.name,
+    foundItem.locationFound
+  ].filter(Boolean).join(" "));
 
-   const foundSecretCorpus = normalize([
-     foundItem.secretDetail,
-     foundItem.description,
-     foundItem.name,
-     foundItem.locationFound
-   ].filter(Boolean).join(" "));
- 
-   const claimSecretCorpus = normalize([
-     claimData.secretDetail,
-     claimData.claimDescription
-   ].filter(Boolean).join(" "));
- 
-   const secretScore = stringSimilarity.compareTwoStrings(foundSecretCorpus, claimSecretCorpus);
-   const colorScore = stringSimilarity.compareTwoStrings(normalize(foundItem.color), normalize(claimData.color));
-   const sizeScore = stringSimilarity.compareTwoStrings(normalize(foundItem.size), normalize(claimData.size));
-   const shapeScore = stringSimilarity.compareTwoStrings(normalize(foundItem.shape), normalize(claimData.shape));
- 
-   const foundContext = normalize([foundItem.name, foundItem.description].filter(Boolean).join(" "));
-   const claimContext = normalize([claimData.claimDescription, claimData.secretDetail].filter(Boolean).join(" "));
-   const contextScore = stringSimilarity.compareTwoStrings(foundContext, claimContext);
- 
-   const overall =
-     secretScore * weights.secret +
-     colorScore * weights.color +
-     sizeScore * weights.size +
-     shapeScore * weights.shape +
-     contextScore * weights.context;
- 
-   return Math.max(0, Math.min(1, overall));
- }
- 
- async function computeClaimScoreWithChatGPT(foundItem, claimData) {
-   const apiKey = process.env.OPENAI_API_KEY;
-   if (!apiKey) {
-     return {
-       score: computeClaimScore(foundItem, claimData),
-       source: "fallback-local",
-       rationale: "OPENAI_API_KEY is not configured, local matcher used instead."
-     };
-   }
- 
-   const foundPayload = {
-     name: foundItem.name || "",
-     description: foundItem.description || "",
-     color: foundItem.color || "",
-     size: foundItem.size || "",
-     shape: foundItem.shape || "",
-     locationFound: foundItem.locationFound || "",
-     secretDetail: foundItem.secretDetail || ""
-   };
- 
-   const claimPayload = {
-     secretDetail: claimData.secretDetail || "",
-     claimDescription: claimData.claimDescription || "",
-     claimantName: claimData.claimantName || "",
-     claimantContact: claimData.claimantContact || "",
-     color: claimData.color || "",
-     size: claimData.size || "",
-     shape: claimData.shape || ""
-   };
- 
-   const prompt = `You are validating if a student's claim likely matches a found item.
- Compare the found item and claimant details and return strict JSON only:
- {"score": number, "reason": string}
- 
- Rules:
- - score must be from 0 to 1.
- - score is textual/semantic match confidence.
- - 0.75 or higher means claimable, lower means not claimable.
- - Give a concise reason.
- 
- Found item data: ${JSON.stringify(foundPayload)}
- Claim data: ${JSON.stringify(claimPayload)}`;
- 
-   try {
-     const response = await openai.chat.completions.create({
-       model: OPENAI_MODEL,
-       temperature: 0,
-       messages: [
-         { role: "system", content: "You output strict JSON only." },
-         { role: "user", content: prompt }
-       ]
-     });
- 
-     const content = response?.choices?.[0]?.message?.content || "{}";
-     const parsed = JSON.parse(extractJson(content));
-     const parsedScore = Number(parsed.score);
-     const safeScore = Number.isFinite(parsedScore) ? Math.max(0, Math.min(1, parsedScore)) : 0;
- 
-     return {
-       score: safeScore,
-       source: "chatgpt",
-       rationale: parsed.reason || "AI text matching applied."
-     };
-   } catch (error) {
-     return {
-       score: computeClaimScore(foundItem, claimData),
-       source: "fallback-local",
-       rationale: `OpenAI check failed, local matcher used: ${error.message}`
-     };
-   }
- }
- 
- function extractJson(text) {
-   const trimmed = (text || "").trim();
-   if (trimmed.startsWith("{") && trimmed.endsWith("}")) return trimmed;
-   const first = trimmed.indexOf("{");
-   const last = trimmed.lastIndexOf("}");
-   if (first >= 0 && last > first) return trimmed.slice(first, last + 1);
-   return "{}";
+  const claimSecretCorpus = normalize([
+    claimData.secretDetail,
+    claimData.claimDescription
+  ].filter(Boolean).join(" "));
+
+  const secretScore = stringSimilarity.compareTwoStrings(foundSecretCorpus, claimSecretCorpus);
+  const colorScore = stringSimilarity.compareTwoStrings(normalize(foundItem.color), normalize(claimData.color));
+  const sizeScore = stringSimilarity.compareTwoStrings(normalize(foundItem.size), normalize(claimData.size));
+  const shapeScore = stringSimilarity.compareTwoStrings(normalize(foundItem.shape), normalize(claimData.shape));
+
+  const foundContext = normalize([foundItem.name, foundItem.description].filter(Boolean).join(" "));
+  const claimContext = normalize([claimData.claimDescription, claimData.secretDetail].filter(Boolean).join(" "));
+  const contextScore = stringSimilarity.compareTwoStrings(foundContext, claimContext);
+
+  const overall =
+    secretScore * weights.secret +
+    colorScore * weights.color +
+    sizeScore * weights.size +
+    shapeScore * weights.shape +
+    contextScore * weights.context;
+
+  return Math.max(0, Math.min(1, overall));
+}
+
+async function computeClaimScoreWithChatGPT(foundItem, claimData) {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) {
+    return {
+      score: computeClaimScore(foundItem, claimData),
+      source: "fallback-local",
+      rationale: "OPENAI_API_KEY is not configured, local matcher used instead."
+    };
+  }
+
+  const foundPayload = {
+    name: foundItem.name || "",
+    description: foundItem.description || "",
+    color: foundItem.color || "",
+    size: foundItem.size || "",
+    shape: foundItem.shape || "",
+    locationFound: foundItem.locationFound || "",
+    secretDetail: foundItem.secretDetail || ""
+  };
+
+  const claimPayload = {
+    secretDetail: claimData.secretDetail || "",
+    claimDescription: claimData.claimDescription || "",
+    claimantName: claimData.claimantName || "",
+    claimantContact: claimData.claimantContact || "",
+    color: claimData.color || "",
+    size: claimData.size || "",
+    shape: claimData.shape || ""
+  };
+
+  const prompt = `You are validating if a student's claim likely matches a found item.
+Compare the found item and claimant details and return strict JSON only:
+{"score": number, "reason": string}
+
+Rules:
+- score must be from 0 to 1.
+- score is textual/semantic match confidence.
+- 0.75 or higher means claimable, lower means not claimable.
+- Give a concise reason.
+
+Found item data: ${JSON.stringify(foundPayload)}
+Claim data: ${JSON.stringify(claimPayload)}`;
+
+  try {
+    const response = await openai.chat.completions.create({
+      model: OPENAI_MODEL,
+      temperature: 0,
+      messages: [
+        { role: "system", content: "You output strict JSON only." },
+        { role: "user", content: prompt }
+      ]
+    });
+
+    const content = response?.choices?.[0]?.message?.content || "{}";
+    const parsed = JSON.parse(extractJson(content));
+    const parsedScore = Number(parsed.score);
+    const safeScore = Number.isFinite(parsedScore) ? Math.max(0, Math.min(1, parsedScore)) : 0;
+
+    return {
+      score: safeScore,
+      source: "chatgpt",
+      rationale: parsed.reason || "AI text matching applied."
+    };
+  } catch (error) {
+    return {
+      score: computeClaimScore(foundItem, claimData),
+      source: "fallback-local",
+      rationale: `OpenAI check failed, local matcher used: ${error.message}`
+    };
+  }
+}
+
+function extractJson(text) {
+  const trimmed = (text || "").trim();
+  if (trimmed.startsWith("{") && trimmed.endsWith("}")) return trimmed;
+  const first = trimmed.indexOf("{");
+  const last = trimmed.lastIndexOf("}");
+  if (first >= 0 && last > first) return trimmed.slice(first, last + 1);
+  return "{}";
  }
  
  function computeMatchesAgainstFound(foundItems, lostItem) {
