@@ -121,11 +121,11 @@ document.getElementById('gallery').addEventListener('click', async (e) => {
         return;
     }
 
-    const claimantName = (prompt('Your name (optional):') || '').trim();
-    const claimantContact = (prompt('Your contact (optional):') || '').trim();
-    const color = (prompt('Color (optional):') || '').trim();
-    const size = (prompt('Size (optional):') || '').trim();
-    const shape = (prompt('Shape (optional):') || '').trim();
+    const claimantName = (prompt('Your name:') || '').trim();
+    const claimantContact = (prompt('Your contact (email/ number):') || '').trim();
+    const color = (prompt('Color:') || '').trim();
+    const size = (prompt('Size:') || '').trim();
+    const shape = (prompt('Shape:') || '').trim();
 
     try {
         const res = await fetch(`/api/claim/${id}`, {
