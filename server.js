@@ -40,9 +40,16 @@
  const OPENAI_MODEL = process.env.OPENAI_MODEL || "gpt-4o-mini";
  const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
  
- app.post("/api/report", async (req, res) => {
+ app.post("/api/report", upload.single("image"), async (req, res) => {
    try {
      const body = req.body;
+    
+    let reportImageUrl = "";
+    if (req.file && req.file.buffer) {
+      const uploadResult = await uploadBufferToCloudinary(req.file.buffer, "feu_lost_reports");
+      reportImageUrl = uploadResult.secure_url;
+    }
+
      const lost = new LostItem({
        itemName: body.itemName || "",
        description: body.description || "",
@@ -51,14 +58,23 @@
        shape: body.shape || "",
        locationLost: body.locationLost || "",
        secretDetail: body.secretDetail || "",
-       contact: body.contact || ""
+       contact: body.contact || "",
+       reportImageUrl
      });
      await lost.save();
  
      // After storing, we can also compute possible matches (found items) and return them
-     const foundItems = await FoundItem.find();
-     const matches = computeMatchesAgainstFound(foundItems, lost);
-     res.status(201).json({ message: "Report saved", matches });
+     const foundItems = await FoundItem.find({ claimed: false });
+     const threshold = Number(process.env.REPORT_MATCH_THRESHOLD || process.env.MATCH_THRESHOLD || 0.75);
+     const allMatches = computeMatchesAgainstFound(foundItems, lost);
+     const matches = allMatches.filter(match => match.score >= threshold);
+
+     res.status(201).json({
+       message: "Report saved",
+       matches,
+       hasMatches: matches.length > 0,
+       threshold
+    });
    } catch (err) {
      res.status(500).json({ error: err.message });
    }
@@ -66,10 +82,15 @@
  
  app.get("/api/missing", async (req, res) => {
    try {
+        const adminSecret = req.headers["x-admin-secret"] || req.query.adminSecret;
+    if (adminSecret !== process.env.ADMIN_SECRET) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
      const missing = await LostItem.find({ status: { $ne: "returned" } }).sort({ dateReported: -1 });
-     res.json(missing);
+     return res.json(missing);
    } catch (err) {
-     res.status(500).json({ error: err.message });
+     return res.status(500).json({ error: err.message });
    }
  });
  
