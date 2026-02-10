@@ -28,18 +28,22 @@
         <div class="report-sheet">
             <h1>Report a Lost Item</h1>
 
-            <form class="report-form" id="reportForm">
+             <form class="report-form" id="reportForm" enctype="multipart/form-data">
                 <input type="text" name="itemName" placeholder="Item name" required>
+                <input type="text" name="description" placeholder="Description / exact contents" required>
                 <input type="text" name="locationLost" placeholder="Where was it lost?" required>
                 <input type="text" name="color" placeholder="Color">
                 <input type="text" name="size" placeholder="Size">
                 <input type="text" name="shape" placeholder="Shape">
+                <input type="text" name="contact" placeholder="Your contact info" required>
                 <input type="text" name="secretDetail" placeholder="Secret detail (only you know)" required>
+                <input type="file" name="image" accept="image/*">
 
                 <button type="submit" class="btn">Submit</button>
             </form>
 
             <p id="message"></p>
+            <div id="matches"></div>
         </div>
     </div>
 
@@ -55,25 +59,61 @@
 <script>
 const form = document.getElementById('reportForm');
 const message = document.getElementById('message');
+    const matchesEl = document.getElementById('matches');
+
+function renderMatches(matches) {
+    matchesEl.innerHTML = '';
+    if (!matches.length) return;
+
+    const title = document.createElement('p');
+    title.innerHTML = '<strong>Possible matches in the gallery:</strong>';
+    matchesEl.appendChild(title);
+
+    const list = document.createElement('ul');
+    matches.forEach(match => {
+        const item = document.createElement('li');
+        const scorePercent = Math.round((match.score || 0) * 100);
+        item.innerHTML = `${match.name || 'Unnamed item'} — ${scorePercent}% match (${match.locationFound || 'Unknown location'})`;
+        list.appendChild(item);
+    });
+
+    const guide = document.createElement('p');
+    guide.innerHTML = 'Please check <a href="index.html">the gallery</a> and claim if one looks like yours.';
+
+    matchesEl.appendChild(list);
+    matchesEl.appendChild(guide);
+}
 
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
+    matchesEl.innerHTML = '';
 
-    const data = Object.fromEntries(new FormData(form).entries());
+    const formData = new FormData(form);
 
     try {
-        const res = await fetch('/report', {
+        const res = await fetch('/api/report', {    
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
+            body: formData
         });
 
         const result = await res.json();
 
-        message.textContent = result.message || result.error;
-        message.style.color = result.error ? 'red' : 'green';
+        if (!res.ok || result.error) {
+            message.textContent = result.error || 'Error submitting report.';
+            message.style.color = 'red';
+            return;
+        }
 
-        if (!result.error) form.reset();
+        message.style.color = 'green';
+
+        if (result.hasMatches && Array.isArray(result.matches) && result.matches.length) {
+            message.textContent = 'Report submitted. We found possible matches in the gallery.';
+            renderMatches(result.matches);
+        } else {
+            message.textContent = 'Report submitted. There are no matching items in the gallery yet. Your item is now reported; please wait for further updates from the admin.';
+        }
+
+        form.reset();
 
     } catch (err) {
         message.textContent = 'Error submitting report.';
