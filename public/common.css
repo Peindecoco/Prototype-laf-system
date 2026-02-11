@@ -113,7 +113,7 @@ nav a:hover {
   align-items: center;
 }
 .main-home {
-  background-image: url(../assets/feu_grounds_bg.png);
+  background-image: url(https://res.cloudinary.com/do7rjbs6t/image/upload/v1770720254/feu_grounds_bg_yimxkp.png);
   background-size: cover;
   background-position: bottom;
   height: 800px;
@@ -123,7 +123,7 @@ nav a:hover {
   align-items: center;
 }
 .main-admin {
-  background-image: url(../assets/feu_grounds_bg.png);
+  background-image: url(https://res.cloudinary.com/do7rjbs6t/image/upload/v1770720254/feu_grounds_bg_yimxkp.png);
   background-size: cover;
   background-position: bottom;
   height: 750px;
