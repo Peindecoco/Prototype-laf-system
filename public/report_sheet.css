@@ -96,6 +96,7 @@ textarea:focus {
   /* ===== REPORT SHEET ===== */
   .report-sheet {
     border-radius: 0;
+    margin: 20px 0;
     width: 100%;
   }
   .report-sheet-admin {
