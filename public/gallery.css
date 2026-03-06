@@ -71,9 +71,9 @@
 .container-gallery {
   background-color: color-mix(in srgb, var(--light-bg) 30%, transparent);
   backdrop-filter: blur(5px);
-  height: 1000px;
+  height: auto;
   width: 100%;
-  margin: 0 80px;
+  margin: 40px 80px;
   padding: 20px;
   box-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
 }
@@ -93,7 +93,8 @@
 }
 .gallery-main {
   width: 100%;
-  margin: 20px 0;
+  margin-top: 20px;
+  margin-bottom: 60px;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 30px;
@@ -258,15 +259,13 @@
 
   /* ===== GALLERY ===== */
   .container-gallery {
-    height: 1300px;
-    margin: 0;
+    margin: 20px 0;
     padding: 10px;
   }
   .gallery-header h1 {
     font-size: 100%;
   }
   .gallery-main {
-    margin: 20px 0;
     grid-template-columns: repeat(2, 1fr);
     gap: 20px;
   }
