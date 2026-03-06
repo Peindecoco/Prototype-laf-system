@@ -21,20 +21,21 @@
 
 /* ===== REPORT SHEET ===== */
 .report-sheet {
-  height: 550px;
+  height: auto;
   background-color: color-mix(in srgb, var(--light-bg) 30%, transparent);
   border-radius: 12px;
   width: 700px;
   box-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
-  padding: 0 30px;
+  padding: 20px 30px;
   display: flex;
   justify-content: center;
   flex-direction: column;
   gap: 20px;
   backdrop-filter: blur(5px);
+  margin: 40px 0;
 }
 .report-sheet-admin {
-  height: 600px;
+  height: 750px;
   background-color: color-mix(in srgb, var(--light-bg) 30%, transparent);
   border-radius: 12px;
   width: 700px;
