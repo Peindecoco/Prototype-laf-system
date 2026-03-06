@@ -103,27 +103,17 @@ nav a:hover {
 
 /* ===== MAIN CONTENT ===== */
 .main { /*common*/
-  background-image: url(https://res.cloudinary.com/do7rjbs6t/image/upload/v1770720254/feu_grounds_bg_yimxkp.png);
+  background-image: url(../assets/feu_grounds_bg.png);
   background-size: cover;
   background-position: bottom;
-  height: 700px;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.main-home {
-  background-image: url(https://res.cloudinary.com/do7rjbs6t/image/upload/v1770720254/feu_grounds_bg_yimxkp.png);
-  background-size: cover;
-  background-position: bottom;
-  height: 1050px;
+  height: auto;
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 .main-admin {
-  background-image: url(https://res.cloudinary.com/do7rjbs6t/image/upload/v1770720254/feu_grounds_bg_yimxkp.png);
+  background-image: url(../assets/feu_grounds_bg.png);
   background-size: cover;
   background-position: bottom;
   height: 850px;
@@ -293,14 +283,6 @@ footer {
   .nav-active {
     background-color: var(--feu-gold);
     color: var(--feu-dark-green);
-  }
-  
-  /* ===== MAIN CONTENT ===== */
-  .main {
-    height: 600px;
-  }
-  .main-home {
-    height: 1350px;
   }
   
   /* ===== FOOTER ===== */
