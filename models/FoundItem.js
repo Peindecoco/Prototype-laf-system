@@ -18,11 +18,10 @@ const FoundItemSchema = new mongoose.Schema({
   claimRequests: [{
     claimantName: { type: String, default: "" },
     claimantContact: { type: String, default: "" },
-    secretDetail: { type: String, default: "" },
     claimDescription: { type: String, default: "" },
     color: { type: String, default: "" },
     size: { type: String, default: "" },
-    shape: { type: String, default: "" },
+    locationFound: { type: String, default: "" },
     score: { type: Number, default: 0 },
     source: { type: String, default: "" },
     claimable: { type: Boolean, default: false },
