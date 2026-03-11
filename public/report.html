@@ -30,13 +30,12 @@
 
              <form class="report-form" id="reportForm" enctype="multipart/form-data">
                 <input type="text" name="itemName" placeholder="Item name" required><br>
-                <input type="text" name="description" placeholder="Description / exact contents" required><br>
+                <input type="text" name="description" placeholder="Description / identifying details" required><br>
                 <input type="text" name="locationLost" placeholder="Where was it lost?" required><br>
                 <input type="text" name="color" placeholder="Color"><br>
                 <input type="text" name="size" placeholder="Size"><br>
                 <input type="text" name="shape" placeholder="Shape"><br>
                 <input type="text" name="contact" placeholder="Your contact info" required><br>
-                <input type="text" name="secretDetail" placeholder="Secret detail (only you know)" required><br>
                 <input type="file" name="image" accept="image/*"><br>
 
                 <button type="submit" class="btn">Submit</button>
@@ -59,7 +58,7 @@
 <script>
 const form = document.getElementById('reportForm');
 const message = document.getElementById('message');
-    const matchesEl = document.getElementById('matches');
+const matchesEl = document.getElementById('matches');
 
 function renderMatches(matches) {
     matchesEl.innerHTML = '';
@@ -112,8 +111,6 @@ form.addEventListener('submit', async (e) => {
         } else {
             message.textContent = 'Report submitted. There are no matching items in the gallery yet. Your item is now reported; please wait for further updates from the admin.';
         }
-
-        form.reset();
 
         form.reset();
     } catch (err) {
