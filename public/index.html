@@ -139,31 +139,23 @@ document.getElementById('gallery').addEventListener('click', async (e) => {
 
     const id = e.target.dataset.id;
 
-    const secretDetail = (prompt('Enter a secret detail only the owner knows:') || '').trim();
-    const claimDescription = (prompt('Describe additional proof (brand, markings, exact contents, etc.):') || '').trim();
-
-    if (!secretDetail && !claimDescription) {
-        alert('Please provide at least a secret detail or identifying description.');
+    const claimDescription = (prompt('Describe your item (include secret details here):') || '').trim();
+    if (!claimDescription) {
+        alert('Description is required. Include details only the owner knows.');
         return;
     }
 
-    if (!secretDetail && !claimDescription) {
-        alert('Please provide at least a secret detail or identifying description.');
-        return;
-    }
-
-    const claimantName = (prompt('Your name:') || '').trim();
-    const claimantContact = (prompt('Your contact (email/ number):') || '').trim();
-    const color = (prompt('Color:') || '').trim();
+    const claimantName = (prompt('Your name (optional):') || '').trim();
+    const claimantContact = (prompt('Your contact (optional):') || '').trim();
+    const color = (prompt('Color name:') || '').trim();
     const size = (prompt('Size:') || '').trim();
-    const shape = (prompt('Shape:') || '').trim();
+    const locationFound = (prompt('Location found:') || '').trim();
 
     try {
         const res = await fetch(`/api/claim/${id}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                secretDetail,
                 claimDescription,
                 claimantName,
                 claimantContact,
