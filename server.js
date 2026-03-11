@@ -57,7 +57,6 @@
        size: body.size || "",
        shape: body.shape || "",
        locationLost: body.locationLost || "",
-       secretDetail: body.secretDetail || "",
        contact: body.contact || "",
        reportImageUrl
      });
@@ -113,12 +112,12 @@
        size,
        shape,
        locationFound,
-       secretDetail
-     } = req.body;
- 
-     if (adminSecret !== process.env.ADMIN_SECRET) {
-       return res.status(401).json({ message: "Unauthorized" });
-     }
+       category
+    } = req.body;
+
+    if (adminSecret !== process.env.ADMIN_SECRET) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
  
      let imageUrl = "";
      if (req.file && req.file.buffer) {
@@ -131,9 +130,9 @@
        description: description || "",
        color: color || "",
        size: size || "",
-       shape: shape || "",
+       shape: "",
        locationFound: locationFound || "",
-       secretDetail: secretDetail || "",
+       category: category || "all",
        imageUrl
      });
 
@@ -147,34 +146,31 @@
  app.post("/api/claim/:id", async (req, res) => {
    try {
      const itemId = req.params.id;
-     const { secretDetail, color, size, shape, claimDescription, claimantName, claimantContact } = req.body;
+     const { color, size, locationFound, claimDescription, claimantName, claimantContact } = req.body;
  
      const item = await FoundItem.findById(itemId);
      if (!item) return res.status(404).json({ success: false, message: "Item not found" });
-     const claimData = { secretDetail, color, size, shape, claimDescription, claimantName, claimantContact };
-     const sanitizedClaimantName = (claimantName || "").toString().trim();
-     const sanitizedClaimantContact = (claimantContact || "").toString().trim();
-     const fallbackScore = computeClaimScore(item, claimData);;
- 
-     const aiResult = await computeClaimScoreWithChatGPT(item, claimData);
-     const score = aiResult.score;
- 
-     const threshold = Number(process.env.MATCH_THRESHOLD || 0.75);
-     const claimable = score >= threshold;
+    const claimData = { color, size, locationFound, claimDescription, claimantName, claimantContact };
+    const sanitizedClaimantName = (claimantName || "").toString().trim();
+    const sanitizedClaimantContact = (claimantContact || "").toString().trim();
 
-     item.claimRequests = item.claimRequests || [];
-     item.claimRequests.push({
-       claimantName: sanitizedClaimantName,
-       claimantContact: sanitizedClaimantContact,
-       secretDetail: (secretDetail || "").toString(),
-       claimDescription: (claimDescription || "").toString(),
-       color: (color || "").toString(),
-       size: (size || "").toString(),
-       shape: (shape || "").toString(),
-       score,
-       source: aiResult.source,
-       claimable,
-       createdAt: new Date()
+    const aiResult = await computeClaimScoreWithAI(item, claimData);
+    const score = aiResult.score;
+ 
+    const claimable = score >= threshold;
+
+    item.claimRequests = item.claimRequests || [];
+    item.claimRequests.push({
+      claimantName: sanitizedClaimantName,
+      claimantContact: sanitizedClaimantContact,
+      claimDescription: (claimDescription || "").toString(),
+      color: (color || "").toString(),
+      size: (size || "").toString(),
+      locationFound: (locationFound || "").toString(),
+      score,
+      source: aiResult.source,
+      claimable,
+      createdAt: new Date()
     });
 
     if (claimable) {
@@ -222,111 +218,84 @@
    });
  }
  
- function computeClaimScore(foundItem, claimData) {
-   const weights = { secret: 0.55, color: 0.15, size: 0.1, shape: 0.1, context: 0.1 };
-   const normalize = (text) => (text || "").toString().toLowerCase().trim();
-
- const foundSecretCorpus = normalize([
-    foundItem.secretDetail,
-    foundItem.description,
-    foundItem.name,
-    foundItem.locationFound
-  ].filter(Boolean).join(" "));
-
-  const claimSecretCorpus = normalize([
-    claimData.secretDetail,
-    claimData.claimDescription
-  ].filter(Boolean).join(" "));
-
-  const secretScore = stringSimilarity.compareTwoStrings(foundSecretCorpus, claimSecretCorpus);
-  const colorScore = stringSimilarity.compareTwoStrings(normalize(foundItem.color), normalize(claimData.color));
-  const sizeScore = stringSimilarity.compareTwoStrings(normalize(foundItem.size), normalize(claimData.size));
-  const shapeScore = stringSimilarity.compareTwoStrings(normalize(foundItem.shape), normalize(claimData.shape));
-
-  const foundContext = normalize([foundItem.name, foundItem.description].filter(Boolean).join(" "));
-  const claimContext = normalize([claimData.claimDescription, claimData.secretDetail].filter(Boolean).join(" "));
-  const contextScore = stringSimilarity.compareTwoStrings(foundContext, claimContext);
-
-  const overall =
-    secretScore * weights.secret +
-    colorScore * weights.color +
-    sizeScore * weights.size +
-    shapeScore * weights.shape +
-    contextScore * weights.context;
-
-  return Math.max(0, Math.min(1, overall));
-}
-
-async function computeClaimScoreWithChatGPT(foundItem, claimData) {
+async function computeClaimScoreWithAI(foundItem, claimData) {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) {
-    return {
-      score: computeClaimScore(foundItem, claimData),
-      source: "fallback-local",
-      rationale: "OPENAI_API_KEY is not configured, local matcher used instead."
-    };
+    throw new Error("OPENAI_API_KEY is required for AI matching.");
   }
 
   const foundPayload = {
-    name: foundItem.name || "",
     description: foundItem.description || "",
     color: foundItem.color || "",
     size: foundItem.size || "",
-    shape: foundItem.shape || "",
-    locationFound: foundItem.locationFound || "",
-    secretDetail: foundItem.secretDetail || ""
+    locationFound: foundItem.locationFound || ""
   };
 
   const claimPayload = {
-    secretDetail: claimData.secretDetail || "",
-    claimDescription: claimData.claimDescription || "",
-    claimantName: claimData.claimantName || "",
-    claimantContact: claimData.claimantContact || "",
+    description: claimData.claimDescription || "",
     color: claimData.color || "",
     size: claimData.size || "",
-    shape: claimData.shape || ""
+    locationFound: claimData.locationFound || ""
   };
 
-  const prompt = `You are validating if a student's claim likely matches a found item.
-Compare the found item and claimant details and return strict JSON only:
-{"score": number, "reason": string}
+  return scoreMatchWithAI(foundPayload, claimPayload, "claim_verification");
+}
+async function computeMatchesAgainstFoundWithAI(foundItems, lostItem) {
+  const lostPayload = {
+    description: lostItem.description || "",
+    color: lostItem.color || "",
+    size: lostItem.size || "",
+    locationFound: lostItem.locationLost || ""
+  };
 
-Rules:
-- score must be from 0 to 1.
-- score is textual/semantic match confidence.
-- 0.75 or higher means claimable, lower means not claimable.
-- Give a concise reason.
-
-Found item data: ${JSON.stringify(foundPayload)}
-Claim data: ${JSON.stringify(claimPayload)}`;
-
-  try {
-    const response = await openai.chat.completions.create({
-      model: OPENAI_MODEL,
-      temperature: 0,
-      messages: [
-        { role: "system", content: "You output strict JSON only." },
-        { role: "user", content: prompt }
-      ]
-    });
-
-    const content = response?.choices?.[0]?.message?.content || "{}";
-    const parsed = JSON.parse(extractJson(content));
-    const parsedScore = Number(parsed.score);
-    const safeScore = Number.isFinite(parsedScore) ? Math.max(0, Math.min(1, parsedScore)) : 0;
-
-    return {
-      score: safeScore,
-      source: "chatgpt",
-      rationale: parsed.reason || "AI text matching applied."
+  const scored = await Promise.all(foundItems.map(async (item) => {
+    const foundPayload = {
+      description: item.description || "",
+      color: item.color || "",
+      size: item.size || "",
+      locationFound: item.locationFound || ""
     };
-  } catch (error) {
+
+    const ai = await scoreMatchWithAI(foundPayload, lostPayload, "lost_report_match");
     return {
-      score: computeClaimScore(foundItem, claimData),
-      source: "fallback-local",
-      rationale: `OpenAI check failed, local matcher used: ${error.message}`
+      id: item._id,
+      name: item.name,
+      score: ai.score,
+      rationale: ai.rationale,
+      imageUrl: item.imageUrl,
+      locationFound: item.locationFound,
+      description: item.description
     };
-  }
+  }));
+
+  return scored.sort((a, b) => b.score - a.score).slice(0, 3);
+}
+
+async function scoreMatchWithAI(foundPayload, inputPayload, purpose) {
+  const response = await openai.chat.completions.create({
+    model: OPENAI_MODEL,
+    temperature: 0,
+    messages: [
+      { role: "system", content: "You are a strict JSON matcher. Only output valid JSON." },
+      {
+        role: "user",
+        content: `Evaluate semantic match confidence between these records for ${purpose}. Use only: description (includes secret details), color, size, and locationFound. Return ONLY JSON: {"score": number, "reason": string}. Score must be between 0 and 1.
+Found item: ${JSON.stringify(foundPayload)}
+Input data: ${JSON.stringify(inputPayload)}`
+      }
+    ]
+       });
+
+ const content = response?.choices?.[0]?.message?.content || "{}";
+  const parsed = JSON.parse(extractJson(content));
+  const parsedScore = Number(parsed.score);
+  const safeScore = Number.isFinite(parsedScore) ? Math.max(0, Math.min(1, parsedScore)) : 0;
+
+  return {
+    score: safeScore,
+    source: "chatgpt",
+    rationale: parsed.reason || "AI text matching applied."
+  };
 }
 
 function extractJson(text) {
@@ -336,21 +305,6 @@ function extractJson(text) {
   const last = trimmed.lastIndexOf("}");
   if (first >= 0 && last > first) return trimmed.slice(first, last + 1);
   return "{}";
- }
- 
- function computeMatchesAgainstFound(foundItems, lostItem) {
-   const results = foundItems.map(fi => {
-     const score = computeClaimScore(fi, {
-       secretDetail: lostItem.secretDetail,
-       color: lostItem.color,
-       size: lostItem.size,
-       shape: lostItem.shape
-     });
-     return { item: fi, score };
-   });
-   results.sort((a,b)=> b.score - a.score);
-   return results.slice(0,3).map(r => ({ id: r.item._id, name: r.item.name, score: r.score, imageUrl: r.item.imageUrl, locationFound: r.item.locationFound, secretDetail: r.item.secretDetail, description: r.item.description }));
- }
- 
+}
  const PORT = process.env.PORT || 10000;
  app.listen(PORT, () => console.log(`🚀 Server listening on port ${PORT}`));
