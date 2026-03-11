@@ -32,12 +32,20 @@
 
           <input name="adminSecret" placeholder="Admin Secret" required><br>
           <input name="name" placeholder="Item Name" required><br>
-          <input name="description" placeholder="Description" required><br>
-          <input name="color" placeholder="Color"><br>
-          <input name="size" placeholder="Size"><br>
-          <input name="shape" placeholder="Shape"><br>
-          <input name="locationFound" placeholder="Location Found"><br>
-          <input name="secretDetail" placeholder="Secret Detail (owner-only identifier)" required><br>
+          <input name="description" placeholder="Description (include identifying/secret details)" required>
+          <input name="color" placeholder="Color Name" required>
+          <input name="size" placeholder="Size" required>
+          <input name="locationFound" placeholder="Location Found" required>
+
+          <select name="category" required>
+            <option value="" disabled selected>Select filter category</option>
+            <option value="school">School Supplies</option>
+            <option value="personal">Personal Items</option>
+            <option value="bag-cont">Bags / Containers</option>
+            <option value="electronics">Electronics</option>
+            <option value="id-small">ID / Small Valuables</option>
+            <option value="all">Other / All</option>
+          </select>
           <input type="file" name="image" accept="image/*"><br>
           <p style="margin:0 0 10px; font-size:12px; color:#303030;">Tip: Add a strong secret detail (engraving, exact contents, hidden marks) for more accurate claim checking.</p>
           <button type="submit" class="btn">Submit</button>
