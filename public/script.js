@@ -71,16 +71,16 @@ document.addEventListener('click', async (e)=>{
   if(btn.textContent === 'Claim'){
     const id = btn.dataset.id;
     if(!id) return;
-    const secret = prompt('Enter secret detail:');
-    if(secret === null) return;
-    const color = prompt('Color (optional)') || '';
-    const size = prompt('Size (optional)') || '';
-    const shape = prompt('Shape (optional)') || '';
+    const claimDescription = prompt('Describe your item (include identifying details):');
+    if(!claimDescription) return;
+    const color = prompt('Color:') || '';
+    const size = prompt('Size:') || '';
+    const locationFound = prompt('Location found:') || '';
     try{
       const res = await fetch(`/api/claim/${id}`, {
         method:'POST',
         headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({ secretDetail: secret, color, size, shape })
+        body: JSON.stringify({ claimDescription, color, size, locationFound })
       });
       const json = await res.json();
       if(json.success){
