@@ -19,13 +19,61 @@
   color: var(--feu-red);
 }
 
+/* ===== ANNOUNCEMENT BAR ===== */
+.ann {
+  background-color: var(--light-bg);
+  height: 300px;
+  width: 100%;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===== ANNOUNCEMENT CARD ===== */
+.ann-card {
+  background-color: var(--feu-green);
+  height: 80px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+.ann-card img {
+  height: 35px;
+}
+
+/* ===== ANNOUNCEMENT MAIN ===== */
+.ann-main {
+  height: 100%;
+  width: 100%;
+  padding: 10px 20px;
+  display: flex;
+  flex-direction: column;
+}
+.ann-title {
+  font-size: 250%;
+  color: var(--text-dark);
+}
+.ann-date {
+  font-size: 120%;
+  color: var(--text-gray);
+}
+.ann-body {
+  margin-top: 5px;
+  font-size: 130%;
+  color: var(--text-dark);
+  overflow-y: auto;
+  text-align: justify;
+}
+
 /* ===== GALLERY ===== */
 .container-gallery {
   background-color: color-mix(in srgb, var(--light-bg) 30%, transparent);
   backdrop-filter: blur(5px);
-  height: 750px;
+  height: auto;
   width: 100%;
-  margin: 0 80px;
+  margin: 40px 80px;
   padding: 20px;
   box-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
 }
@@ -45,7 +93,8 @@
 }
 .gallery-main {
   width: 100%;
-  margin: 20px 0;
+  margin-top: 20px;
+  margin-bottom: 60px;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 30px;
@@ -73,7 +122,7 @@
   color: var(--text-gray);
 }
 .item-description {
-  background-color: var(--light-bg);
+  background-color: white;
   max-height: 0;
   width: 100%;
   padding: 0 10px;
@@ -86,6 +135,27 @@
   padding: 10px;
   transition: ease-in-out 0.3s;
   border-radius: 0 0 10px 10px;
+}
+
+/* ===== CLAIM BUTTON ===== */
+.claim-btn {
+  height: 30px;
+  width: 100%;
+  background-color: var(--feu-green);
+  color: white;
+  font-weight: 700;
+  border: none;
+  border-radius: 100px;
+  transition: ease-in-out 0.1s;
+}
+.claim-btn:hover {
+  background-color: var(--feu-gold);
+  scale: 1.05;
+  transition: ease-in-out 0.2s;
+}
+.claim-btn:active {
+  scale: calc(1);
+  transition: ease-in-out 0.2s;
 }
 
 /* ===== FILTER ===== */
@@ -158,18 +228,44 @@
 }
 
 @media (max-width: 800px) or (max-height: 500px) {
+  /* ===== ANNOUNCEMENT BAR ===== */
+  .ann {
+    height: 250px;
+  }
+
+  /* ===== ANNOUNCEMENT CARD ===== */
+  .ann-card {
+    height: 60px;
+    gap: 10px;
+  }
+  .ann-card img {
+    height: 19px;
+  }
+
+  /* ===== ANNOUNCEMENT MAIN ===== */
+  .ann-main {
+    padding: 5px 10px;
+  }
+  .ann-title {
+    font-size: 150%;
+  }
+  .ann-date {
+    font-size: 80%;
+  }
+  .ann-body {
+    font-size: 100%;
+    margin-top: 0px;
+  }
 
   /* ===== GALLERY ===== */
   .container-gallery {
-    height: 950px;
-    margin: 0;
+    margin: 20px 0;
     padding: 10px;
   }
   .gallery-header h1 {
     font-size: 100%;
   }
   .gallery-main {
-    margin: 20px 0;
     grid-template-columns: repeat(2, 1fr);
     gap: 20px;
   }

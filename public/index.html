@@ -23,8 +23,20 @@
         <a href="#"><span class="gold-text">03</span> HELP</a>
     </nav>
 
-    <div class="main-home">
+    <div class="main">
         <div class="container-gallery">
+
+            <div class="ann">
+                <div class="ann-card">
+                    <img src="assets/announcement_gold.png" alt="">
+                    <img src="assets/board-gold.png" alt="">
+                </div>
+                <div class="ann-main">
+                    <h1 class="ann-title">Announcement Title</h1>
+                    <p1 class="ann-date">March 67, 2067</p1>
+                    <p1 class="ann-body">This is a sample description which will help on visualizing and understanding the layout of the website while the development is still in progress.</p1>
+                </div>
+            </div>
 
             <div class="gallery-header">
                 <h1>Lost Items Gallery</h1>
@@ -43,7 +55,7 @@
                         <button class="filter-category" data-filter="personal">Personal Items</button>
                         <button class="filter-category" data-filter="bag-cont">Bags / Containers</button>
                         <button class="filter-category" data-filter="electronics">Electronics</button>
-                        <button class="filter-category" data-filter="id-small">ID / Small Valuables</button>
+                        <button class="filter-category" data-filter="id-small">Small Valuables</button>
                     </div>
                 </div>
             </div>
@@ -87,7 +99,7 @@ async function loadItems() {
                     <p>${item.description || 'No description provided.'}</p>
                     <p><strong>Location:</strong> ${item.locationFound || 'Unknown'}</p>
                 </div>
-
+                
                 <button class="claim-btn" data-id="${item._id}">
                     Claim Item
                 </button>
@@ -127,29 +139,37 @@ document.getElementById('gallery').addEventListener('click', async (e) => {
 
     const id = e.target.dataset.id;
 
-    const claimDescription = (prompt('Describe your item (include secret details here):') || '').trim();
-    if (!claimDescription) {
-        alert('Description is required. Include details only the owner knows.');
+    const secretDetail = (prompt('Enter a secret detail only the owner knows:') || '').trim();
+    const claimDescription = (prompt('Describe additional proof (brand, markings, exact contents, etc.):') || '').trim();
+
+    if (!secretDetail && !claimDescription) {
+        alert('Please provide at least a secret detail or identifying description.');
         return;
     }
 
-    const claimantName = (prompt('Your name (optional):') || '').trim();
-    const claimantContact = (prompt('Your contact (optional):') || '').trim();
-    const color = (prompt('Color name:') || '').trim();
+    if (!secretDetail && !claimDescription) {
+        alert('Please provide at least a secret detail or identifying description.');
+        return;
+    }
+
+    const claimantName = (prompt('Your name:') || '').trim();
+    const claimantContact = (prompt('Your contact (email/ number):') || '').trim();
+    const color = (prompt('Color:') || '').trim();
     const size = (prompt('Size:') || '').trim();
-    const locationFound = (prompt('Location found:') || '').trim();
+    const shape = (prompt('Shape:') || '').trim();
 
     try {
         const res = await fetch(`/api/claim/${id}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
+                secretDetail,
                 claimDescription,
                 claimantName,
                 claimantContact,
                 color,
                 size,
-                locationFound
+                shape
             })
         });
 
