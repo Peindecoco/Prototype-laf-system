@@ -9,6 +9,7 @@ const LostItemSchema = new mongoose.Schema({
   locationLost: String,
   secretDetail: String,
   contact: String,
+  reportImageUrl: String,
   dateReported: { type: Date, default: Date.now },
   status: { type: String, default: "missing" }
 });
