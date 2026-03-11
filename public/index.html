@@ -75,8 +75,6 @@
 
 </div>
 
-<script src="js/filter.js"></script>
-
 <script>
 async function loadItems() {
     const gallery = document.getElementById('gallery');
@@ -109,10 +107,31 @@ async function loadItems() {
                       
             gallery.appendChild(card);
         });
+
+        applyFilter();
     } catch (err) {
         gallery.innerHTML = '<p>Error loading items.</p>';
     }
 }
+
+
+let activeFilter = 'all';
+
+function applyFilter() {
+    const cards = document.querySelectorAll('#gallery .object-item');
+    cards.forEach(card => {
+        const cat = card.dataset.category || 'all';
+        card.style.display = (activeFilter === 'all' || cat === activeFilter) ? '' : 'none';
+    });
+}
+
+document.querySelectorAll('.filter-category').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        activeFilter = btn.dataset.filter || 'all';
+        applyFilter();
+    });
+});
 
 /* CLAIM ITEM */
 document.getElementById('gallery').addEventListener('click', async (e) => {

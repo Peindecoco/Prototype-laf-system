@@ -13,15 +13,39 @@
     async function loadMissing() {
       const list = document.getElementById('missingList');
       list.innerHTML = '';
+
+      const adminSecret = prompt('Enter admin secret to view missing reports:');
+      if (!adminSecret) {
+        list.textContent = 'Admin secret is required.';
+        return;
+      }
+
       try {
-        const res = await fetch('/api/missing');
+        const res = await fetch('/api/missing', {
+          headers: { 'x-admin-secret': adminSecret }
+        });
+
+        if (!res.ok) {
+          const err = await res.json();
+          list.textContent = err.error || 'Unauthorized';
+          return;
+        }
+
         const items = await res.json();
+        if (!items.length) {
+          list.textContent = 'No missing item reports yet.';
+          return;
+        }
+
         items.forEach(it => {
           const el = document.createElement('div');
           el.className = 'missing';
           el.innerHTML = `<h3>${it.itemName}</h3>
-            <p>${it.description}</p><p>Color: ${it.color} Size: ${it.size} Shape: ${it.shape}</p>
-            <p>Where: ${it.locationLost}</p>`;
+            <p>${it.description || ''}</p>
+            <p>Color: ${it.color || ''} Size: ${it.size || ''} Shape: ${it.shape || ''}</p>
+            <p>Where: ${it.locationLost || ''}</p>
+            <p>Contact: ${it.contact || ''}</p>
+            ${it.reportImageUrl ? `<p><img src="${it.reportImageUrl}" alt="reported item" style="max-width:220px; border-radius:8px;"></p>` : ""}`;
           list.appendChild(el);
         });
       } catch (err) {

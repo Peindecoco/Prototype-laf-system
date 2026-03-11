@@ -12,14 +12,11 @@
 
 <body>
   <div class="container">
-
-    <!-- HEADER -->
     <header>
         <img src="assets/feu_hs_logo.png" alt="FEU Logo" class="title-img">
         <img src="assets/feu_hs_laf.png" alt="Lost and Found" class="title-text">
     </header>
 
-    <!-- NAVIGATION -->
     <nav>
       <a href="index.html"><span class="gold-text">01</span> HOME</a>
       <a href="report.html"><span class="gold-text">02</span> REPORT</a>
@@ -50,17 +47,9 @@
       </div>
     </div>
 
-    <!-- FOOTER -->
-    <footer>
-      <div class="footer-content">
-        <p>&copy; 2026 FEU High School Lost and Found</p>
-        <p>Powered by FEU Tech Team</p>
-      </div>
-    </footer>
-
+    <footer><div class="footer-content"><p>&copy; 2026 FEU High School Lost and Found</p><p>Powered by FEU Tech Team</p></div></footer>
   </div>
 
-  <!-- SCRIPT -->
   <script>
     const form = document.getElementById('adminForm');
     const msg = document.getElementById('msg');
@@ -68,28 +57,17 @@
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       msg.textContent = '';
-
       const formData = new FormData(form);
 
       try {
-        const res = await fetch('/api/admin/add-found', {
-          method: 'POST',
-          body: formData
-        });
-
+        const res = await fetch('/api/admin/add-found', { method: 'POST', body: formData });
         const json = await res.json();
-
-        if (res.ok) {
-          msg.textContent = json.message || 'Item added successfully';
-          form.reset();
-        } else {
-          msg.textContent = json.error || json.message || 'Upload failed';
-        }
+        msg.textContent = res.ok ? (json.message || 'Item added successfully') : (json.error || json.message || 'Upload failed');
+        if (res.ok) form.reset();
       } catch (err) {
         msg.textContent = 'Error: ' + err.message;
       }
     });
   </script>
-
 </body>
 </html>
