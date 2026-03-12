@@ -158,7 +158,7 @@ document.getElementById('gallery').addEventListener('click', async (e) => {
                 claimantContact,
                 color,
                 size,
-                shape
+                locationFound
             })
         });
 
@@ -171,7 +171,7 @@ document.getElementById('gallery').addEventListener('click', async (e) => {
             alert(`❌ Not a match (${Math.round((result.score || 0) * 100)}%).\n${result.rationale || 'Please provide more accurate details and try again.'}`);
         }
     } catch (err) {
-        alert('Error claiming item.');
+        alert('Error claiming item: ' + (err?.message || 'unknown error'));
     }
 });
 
