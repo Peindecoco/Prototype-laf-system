@@ -36,9 +36,12 @@
    api_secret: process.env.CLOUDINARY_API_SECRET
  });
  
- const upload = multer(); // in-memory
- const OPENAI_MODEL = process.env.OPENAI_MODEL || "gpt-4o-mini";
- const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+const upload = multer(); // in-memory
+const OPENAI_MODEL = process.env.OPENAI_MODEL || "gpt-4o-mini";
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+const DEFAULT_MATCH_THRESHOLD = Number(process.env.MATCH_THRESHOLD || 0.75);
+const REPORT_MATCH_THRESHOLD = Number(process.env.REPORT_MATCH_THRESHOLD || DEFAULT_MATCH_THRESHOLD);
+const CLAIM_MATCH_THRESHOLD = Number(process.env.CLAIM_MATCH_THRESHOLD || DEFAULT_MATCH_THRESHOLD);
  
  app.post("/api/report", upload.single("image"), async (req, res) => {
    try {
@@ -64,8 +67,13 @@
  
      // After storing, we can also compute possible matches (found items) and return them
      const foundItems = await FoundItem.find({ claimed: false });
-     const threshold = Number(process.env.REPORT_MATCH_THRESHOLD || process.env.MATCH_THRESHOLD || 0.75);
-     const allMatches = computeMatchesAgainstFound(foundItems, lost);
+     let allMatches = [];
+     try {
+       allMatches = await computeMatchesAgainstFoundWithAI(foundItems, lost);
+     } catch {
+       allMatches = computeMatchesAgainstFound(foundItems, lost);
+     }
+     const threshold = REPORT_MATCH_THRESHOLD;
      const matches = allMatches.filter(match => match.score >= threshold);
 
      res.status(201).json({
@@ -154,9 +162,33 @@
     const sanitizedClaimantName = (claimantName || "").toString().trim();
     const sanitizedClaimantContact = (claimantContact || "").toString().trim();
 
-    const aiResult = await computeClaimScoreWithAI(item, claimData);
+    const fallbackScore = computeDeterministicScore(
+      {
+        description: item.description,
+        color: item.color,
+        size: item.size,
+        locationFound: item.locationFound
+      },
+      {
+        description: claimDescription,
+        color,
+        size,
+        locationFound
+      }
+    );
+
+    let aiResult = null;
+    try {
+      aiResult = await computeClaimScoreWithAI(item, claimData);
+    } catch {
+      aiResult = {
+        score: fallbackScore,
+        source: "deterministic_fallback",
+        rationale: "AI unavailable; deterministic text matching used."
+      };
+    }
     const score = aiResult.score;
- 
+    const threshold = CLAIM_MATCH_THRESHOLD;
     const claimable = score >= threshold;
 
     item.claimRequests = item.claimRequests || [];
@@ -305,6 +337,59 @@ function extractJson(text) {
   const last = trimmed.lastIndexOf("}");
   if (first >= 0 && last > first) return trimmed.slice(first, last + 1);
   return "{}";
+}
+
+function computeMatchesAgainstFound(foundItems, lostItem) {
+  const lostPayload = {
+    description: lostItem.description || "",
+    color: lostItem.color || "",
+    size: lostItem.size || "",
+    locationFound: lostItem.locationLost || ""
+  };
+
+  return foundItems
+    .map((item) => {
+      const foundPayload = {
+        description: item.description || "",
+        color: item.color || "",
+        size: item.size || "",
+        locationFound: item.locationFound || ""
+      };
+
+      const score = computeDeterministicScore(foundPayload, lostPayload);
+      return {
+        id: item._id,
+        name: item.name,
+        score,
+        rationale: "Deterministic string matching applied.",
+        imageUrl: item.imageUrl,
+        locationFound: item.locationFound,
+        description: item.description
+      };
+    })
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 3);
+}
+
+function computeDeterministicScore(foundPayload, inputPayload) {
+  const similarity = (a, b) => {
+    const left = (a || "").toString().trim().toLowerCase();
+    const right = (b || "").toString().trim().toLowerCase();
+    if (!left || !right) return 0;
+    return stringSimilarity.compareTwoStrings(left, right);
+  };
+
+  const descriptionScore = similarity(foundPayload.description, inputPayload.description);
+  const colorScore = similarity(foundPayload.color, inputPayload.color);
+  const sizeScore = similarity(foundPayload.size, inputPayload.size);
+  const locationScore = similarity(foundPayload.locationFound, inputPayload.locationFound);
+
+  return (
+    descriptionScore * 0.5 +
+    colorScore * 0.2 +
+    sizeScore * 0.15 +
+    locationScore * 0.15
+  );
 }
  const PORT = process.env.PORT || 10000;
  app.listen(PORT, () => console.log(`🚀 Server listening on port ${PORT}`));
