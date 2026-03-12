@@ -94,16 +94,12 @@ async function loadItems() {
             card.innerHTML = `
                 <img src="${item.imageUrl || 'assets/item/default.png'}" alt="item">
                 <h1>${item.name}</h1>
-
-                <div class="item-description">
-                    <p>${item.description || 'No description provided.'}</p>
-                    <p><strong>Location:</strong> ${item.locationFound || 'Unknown'}</p>
                 
                 <button class="claim-btn" data-id="${item._id}">
                     Claim Item
                 </button>
-                </div>
-                      `;
+                </div>          
+            `;
             gallery.appendChild(card);
         });
 
