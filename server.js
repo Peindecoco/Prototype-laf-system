@@ -311,7 +311,7 @@ async function scoreMatchWithAI(foundPayload, inputPayload, purpose) {
       { role: "system", content: "You are a strict JSON matcher. Only output valid JSON." },
       {
         role: "user",
-        content: `Evaluate semantic match confidence between these records for ${purpose}. Use only: description (includes secret details), color, size, and locationFound. Return ONLY JSON: {"score": number, "reason": string}. Score must be between 0 and 1.
+        content: `Evaluate semantic match confidence between these records for ${purpose}. Use only: description (includes secret details), color, size, and locationFound. Try to be strict with specific informations given by the admin and do not accept all vague descriptions given to ensure the user/s information match with the item. Return ONLY JSON: {"score": number, "reason": string}. Score must be between 0 and 1.
 Found item: ${JSON.stringify(foundPayload)}
 Input data: ${JSON.stringify(inputPayload)}`
       }
