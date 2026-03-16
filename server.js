@@ -138,7 +138,7 @@ const CLAIM_MATCH_THRESHOLD = Number(process.env.CLAIM_MATCH_THRESHOLD || DEFAUL
        description: description || "",
        color: color || "",
        size: size || "",
-       shape: "",
+       shape: shape || "",
        locationFound: locationFound || "",
        category: category || "all",
        imageUrl
@@ -154,11 +154,11 @@ const CLAIM_MATCH_THRESHOLD = Number(process.env.CLAIM_MATCH_THRESHOLD || DEFAUL
  app.post("/api/claim/:id", async (req, res) => {
    try {
      const itemId = req.params.id;
-     const { color, size, locationFound, claimDescription, claimantName, claimantContact } = req.body;
+     const { color, size, shape, claimDescription, claimantName, claimantContact } = req.body;
  
      const item = await FoundItem.findById(itemId);
      if (!item) return res.status(404).json({ success: false, message: "Item not found" });
-    const claimData = { color, size, locationFound, claimDescription, claimantName, claimantContact };
+     const claimData = { color, size, shape, claimDescription, claimantName, claimantContact };
     const sanitizedClaimantName = (claimantName || "").toString().trim();
     const sanitizedClaimantContact = (claimantContact || "").toString().trim();
 
@@ -167,13 +167,13 @@ const CLAIM_MATCH_THRESHOLD = Number(process.env.CLAIM_MATCH_THRESHOLD || DEFAUL
         description: item.description,
         color: item.color,
         size: item.size,
-        locationFound: item.locationFound
+        shape: item.shape
       },
       {
         description: claimDescription,
         color,
         size,
-        locationFound
+        shape
       }
     );
 
@@ -198,7 +198,7 @@ const CLAIM_MATCH_THRESHOLD = Number(process.env.CLAIM_MATCH_THRESHOLD || DEFAUL
       claimDescription: (claimDescription || "").toString(),
       color: (color || "").toString(),
       size: (size || "").toString(),
-      locationFound: (locationFound || "").toString(),
+      shape: (shape || "").toString(),
       score,
       source: aiResult.source,
       claimable,
@@ -260,14 +260,14 @@ async function computeClaimScoreWithAI(foundItem, claimData) {
     description: foundItem.description || "",
     color: foundItem.color || "",
     size: foundItem.size || "",
-    locationFound: foundItem.locationFound || ""
+    shape: foundItem.shape || ""
   };
 
   const claimPayload = {
     description: claimData.claimDescription || "",
     color: claimData.color || "",
     size: claimData.size || "",
-    locationFound: claimData.locationFound || ""
+    shape: claimData.shape || ""
   };
 
   return scoreMatchWithAI(foundPayload, claimPayload, "claim_verification");
@@ -311,7 +311,7 @@ async function scoreMatchWithAI(foundPayload, inputPayload, purpose) {
       { role: "system", content: "You are a strict JSON matcher. Only output valid JSON." },
       {
         role: "user",
-        content: `Evaluate semantic match confidence between these records for ${purpose}. Use only: description (includes secret details), color, size, and locationFound. Try to be strict with specific informations given by the admin and do not accept all vague descriptions given to ensure the user/s information match with the item. Return ONLY JSON: {"score": number, "reason": string}. Score must be between 0 and 1.
+                content: `Evaluate semantic match confidence between these records for ${purpose}. Use only: description (includes secret details), color, size, and shape. Try to be strict with specific informations given by the admin and do not accept all vague descriptions given to ensure the user/s information match with the item. Return ONLY JSON: {"score": number, "reason": string}. Score must be between 0 and 1.
 Found item: ${JSON.stringify(foundPayload)}
 Input data: ${JSON.stringify(inputPayload)}`
       }
@@ -382,13 +382,13 @@ function computeDeterministicScore(foundPayload, inputPayload) {
   const descriptionScore = similarity(foundPayload.description, inputPayload.description);
   const colorScore = similarity(foundPayload.color, inputPayload.color);
   const sizeScore = similarity(foundPayload.size, inputPayload.size);
-  const locationScore = similarity(foundPayload.locationFound, inputPayload.locationFound);
+  const shapeScore = similarity(foundPayload.shape, inputPayload.shape);
 
   return (
     descriptionScore * 0.5 +
     colorScore * 0.2 +
     sizeScore * 0.15 +
-    locationScore * 0.15
+    shapeScore * 0.15
   );
 }
  const PORT = process.env.PORT || 10000;
