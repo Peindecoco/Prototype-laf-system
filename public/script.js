@@ -75,12 +75,12 @@ document.addEventListener('click', async (e)=>{
     if(!claimDescription) return;
     const color = prompt('Color:') || '';
     const size = prompt('Size:') || '';
-    const locationFound = prompt('Location found:') || '';
+    const shape = prompt('Shape:') || '';
     try{
       const res = await fetch(`/api/claim/${id}`, {
         method:'POST',
         headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({ claimDescription, color, size, locationFound })
+        body: JSON.stringify({ claimDescription, color, size, shape })
       });
       const json = await res.json();
       if(json.success){
