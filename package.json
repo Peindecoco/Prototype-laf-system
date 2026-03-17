@@ -1,7 +1,12 @@
 {
+  "name": "feu-lostandfound",
+  "version": "1.0.0",
+  "private": true,
   "scripts": {
-    "start": "node server.js",
-    "build": "your-framework-build-command-here"
+    "build": "npm install"
+  },
+  "dependencies": {
+    "some-package": "^1.2.3"
   }
 }
 {
