@@ -1,15 +1,4 @@
 {
-  "name": "feu-lostandfound",
-  "version": "1.0.0",
-  "private": true,
-  "scripts": {
-    "build": "npm install"
-  },
-  "dependencies": {
-    "some-package": "^1.2.3"
-  }
-}
-{
   "name": "feu-lost-and-found",
   "version": "1.0.0",
   "type": "module",
