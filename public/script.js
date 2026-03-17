@@ -13,7 +13,7 @@ function createFoundCard(item){
   const card = document.createElement('div');
   card.className = 'card';
   const img = document.createElement('img');
-  img.src = item.imageUrl || 'https://via.placeholder.com/600x400?text=No+Image';
+  img.src = item.imageUrl || 'assets/item_img.png';
   img.alt = item.name || 'Found item';
   card.appendChild(img);
 
