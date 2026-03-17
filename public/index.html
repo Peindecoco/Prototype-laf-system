@@ -92,7 +92,7 @@ async function loadItems() {
             card.dataset.category = item.category || 'all';
 
             card.innerHTML = `
-                <<img src="${item.imageUrl || 'assets/item_img.png'}" alt="item">
+                <img src="${item.imageUrl || 'assets/item_img.png'}" alt="item">
                 <h1>${item.name}</h1>
 
                 <div class="item-description">
@@ -146,8 +146,8 @@ document.getElementById('gallery').addEventListener('click', async (e) => {
     }
 
     const color = (prompt('Color:') || '').trim();
-    const size = (prompt('Size:') || '').trim();
-    const shape = (prompt('Shape (if the shape is complex type complex):') || '').trim();
+    const size = (prompt('Size (Consider anything below 12 inches as small, and anything 24 inches and above as large.):') || '').trim();
+    const shape = (prompt('Shape (If the shape is complex, label it as “complex.” For clothes, specify the type of clothing.):') || '').trim();
 
     try {
         const res = await fetch(`/api/claim/${id}`, {
