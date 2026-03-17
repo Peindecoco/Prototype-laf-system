@@ -1,3 +1,6 @@
+"scripts": {
+  "build": "vite build"
+}
 {
   "name": "feu-lost-and-found",
   "version": "1.0.0",
