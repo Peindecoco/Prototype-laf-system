@@ -1,4 +1,10 @@
 {
+  "scripts": {
+    "start": "node server.js",
+    "build": "your-framework-build-command-here"
+  }
+}
+{
   "name": "feu-lost-and-found",
   "version": "1.0.0",
   "type": "module",
