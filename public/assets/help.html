@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help | FEUHS Lost and Found</title>
+
+    <link rel="icon" type="image/x-icon" href="assets/web_icon.png">
+    <link rel="stylesheet" href="common.css">
+    <style>
+        .help-main {
+            padding: 40px 0;
+        }
+
+        .help-shell {
+            width: min(1180px, calc(100% - 48px));
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            margin: 40px 0;
+        }
+
+        .help-hero,
+        .help-card {
+            background: color-mix(in srgb, var(--light-bg) 88%, white);
+            box-shadow: 0 0 16px rgba(0, 0, 0, 0.18);
+            border-radius: 24px;
+        }
+
+        .help-hero {
+            display: flex;
+            justify-content: space-between;
+            gap: 24px;
+            align-items: center;
+            padding: 32px;
+            border-left: 8px solid var(--feu-gold);
+        }
+
+        .eyebrow {
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            color: var(--feu-green);
+            font-weight: 700;
+            font-size: 0.78rem;
+            margin-bottom: 10px;
+        }
+
+        .help-hero h1 {
+            font-size: clamp(2rem, 4vw, 3rem);
+            color: var(--feu-dark-green);
+            margin-bottom: 12px;
+        }
+
+        .hero-copy,
+        .help-card p,
+        .help-card li {
+            line-height: 1.6;
+            color: #294233;
+        }
+
+        .hero-copy {
+            max-width: 760px;
+        }
+
+        .hero-actions {
+            min-width: 220px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .hero-btn {
+            text-decoration: none;
+            text-align: center;
+            padding: 14px 18px;
+            border-radius: 999px;
+            font-weight: 700;
+            transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+        }
+
+        .hero-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .hero-btn.primary {
+            background: var(--feu-green);
+            color: white;
+        }
+
+        .hero-btn.secondary {
+            background: transparent;
+            color: var(--feu-dark-green);
+            border: 2px solid var(--feu-dark-green);
+        }
+
+        .help-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 24px;
+        }
+
+        .help-card {
+            padding: 28px;
+            position: relative;
+        }
+
+        .feature-card {
+            min-height: 100%;
+        }
+
+        .success-card {
+            border: 2px solid color-mix(in srgb, var(--feu-gold) 65%, white);
+        }
+
+        .step-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: var(--feu-green);
+            color: white;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .help-card h2,
+        .journey-heading h2 {
+            color: var(--feu-dark-green);
+            margin-bottom: 12px;
+        }
+
+        .help-card ul,
+        .help-card ol {
+            padding-left: 18px;
+            display: grid;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .journey-card {
+            padding: 32px;
+        }
+
+        .timeline {
+            display: grid;
+            gap: 20px;
+            margin-top: 24px;
+        }
+
+        .timeline-item {
+            display: grid;
+            grid-template-columns: 18px 1fr;
+            gap: 16px;
+            align-items: start;
+        }
+
+        .timeline-dot {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--feu-gold);
+            box-shadow: 0 0 0 6px rgba(244, 196, 48, 0.18);
+            margin-top: 6px;
+        }
+
+        .timeline-item h3 {
+            color: var(--feu-green);
+            margin-bottom: 6px;
+        }
+
+        .lower-grid {
+            margin-bottom: 12px;
+        }
+
+        @media (max-width: 900px) {
+            .help-hero,
+            .help-grid {
+                grid-template-columns: 1fr;
+                display: grid;
+            }
+
+            .help-hero {
+                padding: 24px;
+            }
+
+            .hero-actions {
+                min-width: 100%;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .help-shell {
+                width: min(100% - 24px, 1180px);
+                gap: 18px;
+                margin: 20px 0;
+            }
+
+            .help-card,
+            .help-hero,
+            .journey-card {
+                padding: 20px;
+                border-radius: 18px;
+            }
+
+            .help-main {
+                padding: 16px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <header>
+        <img src="assets/feu_hs_logo.png" alt="FEU High School logo" class="title-img">
+        <img src="assets/feu_hs_laf.png" alt="FEU High School Lost and Found" class="title-text">
+    </header>
+
+    <nav>
+        <a href="index.html"><span class="gold-text">01</span> HOME</a>
+        <a href="report.html"><span class="gold-text">02</span> REPORT</a>
+        <a href="help.html" class="nav-active"><span>03</span> HELP</a>
+    </nav>
+
+    <div class="main help-main">
+        <section class="help-shell">
+            <div class="help-hero">
+                <div>
+                    <p class="eyebrow">Main Instruction Page</p>
+                    <h1>How the Lost and Found Website Works</h1>
+                    <p class="hero-copy">
+                        Use this page as your step-by-step guide for finding, claiming, or reporting an item. The gallery is always the first place to check, while the report page is the last resort when your item is not yet listed.
+                    </p>
+                </div>
+
+                <div class="hero-actions">
+                    <a href="index.html" class="hero-btn primary">Open Gallery</a>
+                    <a href="report.html" class="hero-btn secondary">Report Lost Item</a>
+                </div>
+            </div>
+
+            <div class="help-grid">
+                <article class="help-card feature-card">
+                    <span class="step-badge">01</span>
+                    <h2>Start with the Home Gallery</h2>
+                    <p>
+                        The <strong>Home / Gallery page</strong> is the main page of the website. This is where users can browse found items, review item locations, and begin the claiming process.
+                    </p>
+                    <ul>
+                        <li>Open the gallery and look through the listed items.</li>
+                        <li>Use the category filter to narrow down the results faster.</li>
+                        <li>Check the item photo, name, and location before claiming.</li>
+                    </ul>
+                </article>
+
+                <article class="help-card feature-card">
+                    <span class="step-badge">02</span>
+                    <h2>How Claiming Works</h2>
+                    <p>
+                        When you click <strong>Claim Item</strong>, the system asks for your details and your description of the item. The website then uses ChatGPT-based matching to compare your answers with the stored found-item details.
+                    </p>
+                    <ul>
+                        <li>Provide your name and contact information.</li>
+                        <li>Describe the item honestly, including identifying or secret details.</li>
+                        <li>Add the color, size, and shape as accurately as possible.</li>
+                    </ul>
+                </article>
+
+                <article class="help-card feature-card">
+                    <span class="step-badge">03</span>
+                    <h2>AI Matching and Claim Result</h2>
+                    <p>
+                        The AI computes a match score to determine whether your claim is strong enough. If your details match the stored item information, the system will confirm that your claim is successful.
+                    </p>
+                    <ul>
+                        <li>A successful match means you may proceed with claiming the item.</li>
+                        <li>If the match is not strong enough, the system will tell you that the claim was unsuccessful.</li>
+                        <li>More accurate details improve your chance of a correct match.</li>
+                    </ul>
+                </article>
+
+                <article class="help-card feature-card success-card">
+                    <span class="step-badge">04</span>
+                    <h2>After a Successful Claim</h2>
+                    <p>
+                        If the website confirms your claim, take a screenshot of the successful claim message. This screenshot serves as your proof when you proceed to collect the item face to face.
+                    </p>
+                    <ol>
+                        <li>Screenshot the successful claim confirmation.</li>
+                        <li>Keep your screenshot ready for verification.</li>
+                        <li>Proceed to the designated face-to-face claiming or collection process.</li>
+                    </ol>
+                </article>
+            </div>
+
+            <section class="help-card journey-card">
+                <div class="journey-heading">
+                    <p class="eyebrow">Last Resort Process</p>
+                    <h2>When to Use the Report Page</h2>
+                    <p>
+                        The <strong>Report page</strong> should be used only if you cannot find your lost item in the main gallery. This allows the admin or FTS team to take notice of the missing item and search for it.
+                    </p>
+                </div>
+
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <span class="timeline-dot"></span>
+                        <div>
+                            <h3>Report the lost item</h3>
+                            <p>Enter the item name, description, where it was lost, and other details that can help identify it.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <span class="timeline-dot"></span>
+                        <div>
+                            <h3>Provide your email or contact details</h3>
+                            <p>Include your email on the report page so the admin or FTS can reach you with updates if the item is found.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <span class="timeline-dot"></span>
+                        <div>
+                            <h3>Wait for the search process</h3>
+                            <p>The admin or FTS will monitor the report, watch for new found items, and try to locate the missing item.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <span class="timeline-dot"></span>
+                        <div>
+                            <h3>Receive an update after two days if found</h3>
+                            <p>If the item is located after two days, the FTS team will email the user using the contact information provided in the report.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="help-grid lower-grid">
+                <article class="help-card">
+                    <h2>Best Practices for Users</h2>
+                    <ul>
+                        <li>Always check the gallery first before submitting a report.</li>
+                        <li>Be truthful and specific when describing your item.</li>
+                        <li>Prepare identifying details that only the real owner would know.</li>
+                        <li>Save any successful confirmation message or screenshot.</li>
+                    </ul>
+                </article>
+
+                <article class="help-card">
+                    <h2>Quick Summary</h2>
+                    <p><strong>Find item in gallery?</strong> Claim it there first.</p>
+                    <p><strong>Claim approved?</strong> Screenshot the success message and collect the item face to face.</p>
+                    <p><strong>Item not in gallery?</strong> Go to the report page and submit your lost-item report for admin / FTS review.</p>
+                </article>
+            </section>
+        </section>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2026 FEU High School Lost and Found</p>
+            <p>Powered by FEU Tech Team</p>
+        </div>
+    </footer>
+
+</div>
+</body>
+</html>
