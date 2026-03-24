@@ -98,14 +98,12 @@
 .gallery-main {
   width: 100%;
   margin-top: 20px;
-  margin-bottom: 90px;
+  margin-bottom: 60px;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 30px;
 }
 .object-item {
-  background-color: var(--light-bg);
-  height: 235px;
   width: 100%;
   box-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
   transition: ease-in-out 0.3s;
@@ -117,39 +115,38 @@
 }
 .object-item img {
   width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+}
+.object-label {
+  position: absolute;
+  margin-top: 130px;
+  margin-left: 10px;
 }
 .object-item h1 {
-  background-color: var(--light-bg);
-  text-align: center;
-  margin-top: 6px;
   font-size: 130%;
   color: var(--text-gray);
 }
+.location {
+  font-size: 90%;
+  color: var(--text-gray);
+}
 .item-description {
+  position: absolute;
   background-color: white;
   max-height: 0;
   width: 100%;
-  padding: 0 15px;
   transition: ease-in-out 0.3s;
   overflow: hidden;
-}
-.location {
-  background-color: var(--feu-gold);
-  width: auto;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 0 10px;
-  margin-bottom: 10px;
-  border-radius: 7px;
-  font-size: 90%;
+  padding: 0 15px;
+  border-radius: 10px;
 }
 .object-item:hover .item-description {
   max-height: 100px;
   display: block;
   padding: 10px;
   transition: ease-in-out 0.3s;
-  border-radius: 0 0 10px 10px;
 }
 
 /* ===== CLAIM BUTTON ===== */
@@ -320,24 +317,35 @@
     grid-template-columns: repeat(2, 1fr);
     gap: 20px;
   }
-  .object-item {
-    height: 150px;
+  .object-item {  
     border-radius: 5px;
   }
   .object-item:hover {
-    scale: 1.06;
-    transition: ease-in-out 0.3s;
+    scale: 1.05;
   }
   .object-item img {
-    height: auto;
-    width: 100%;
+    border-radius: 10px;
+  }
+  .object-label {
+    margin-top: 90px;
+    margin-left: 5px;
   }
   .object-item h1 {
-    margin: 0;
-    font-size: 90%;
+    font-size: 100%;
+  }
+  .location {
+    font-size: 70%;
   }
   .item-description {
-    font-size: 80%;
+    background-color: white;
+    max-height: 0;
+    width: 100%;
+  }
+  .object-item:hover .item-description {
+    max-height: 100px;
+    display: block;
+    padding: 10px;
+    transition: ease-in-out 0.3s;
   }
   
   /* ===== GPT RESULTS ===== */
@@ -361,6 +369,4 @@
   .gpt-body p {
     font-size: 100%;
   }
-
-  
 }
