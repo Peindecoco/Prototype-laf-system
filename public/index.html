@@ -94,10 +94,10 @@ async function loadItems() {
             card.innerHTML = `
             
                 <img src="${item.imageUrl || 'assets/item_img.png'}" alt="item">
-
-                <div class="item-description" >
                 <h1>${item.name}</h1>
                 <p class="location">Location: ${item.locationFound}</p>
+                <div class="item-description" >
+
                 <button class="claim-btn" data-id="${item._id}">
                     Claim Item
                 </button>
