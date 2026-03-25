@@ -5,7 +5,6 @@
  import multer from "multer";
  import streamifier from "streamifier";
  import cloudinary from "cloudinary";
- import stringSimilarity from "string-similarity";
  import path from "path";
  import { fileURLToPath } from "url";
  import LostItem from "./models/LostItem.js";
