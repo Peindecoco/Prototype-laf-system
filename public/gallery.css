@@ -320,28 +320,64 @@
   }
   .gallery-main {
     grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
+    gap: 14px;
   }
   .object-item {
-    height: 150px;
-    border-radius: 5px;
+    height: 285px;
+    border-radius: 8px;
   }
   .object-item:hover {
     scale: 1.06;
     transition: ease-in-out 0.3s;
   }
   .object-item img {
-    height: auto;
+    height: 150px;
     width: 100%;
   }
   .object-item h1 {
-    margin: 0;
-    font-size: 100%;
+    margin: 0 0 6px;
+    font-size: 140%;
   }
   .item-description {
-    font-size: 80%;
+    min-height: 120px;
+    padding: 10px 12px;
   }
-  
+    .location {
+    margin-bottom: 10px;
+    font-size: 120%;
+  }
+  .claim-btn {
+    height: 34px;
+    font-size: 95%;
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+  }
+  .object-item:hover .claim-btn {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (max-width: 480px) {
+  .gallery-main {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .object-item {
+    height: 300px;
+  }
+  .object-item img {
+    height: 165px;
+  }
+  .object-item h1 {
+    font-size: 150%;
+  }
+  .location {
+    font-size: 115%;
+  }
+}
+
+@media (max-width: 800px) or (max-height: 500px) {
   /* ===== GPT RESULTS ===== */
   .gpt-result-container {
     margin-top: 70px;
