@@ -94,9 +94,9 @@ async function loadItems() {
             card.innerHTML = `
             
                 <img src="${item.imageUrl || 'assets/item_img.png'}" alt="item">
-                <h1>${item.name}</h1>
 
                 <div class="item-description" >
+                <h1>${item.name}</h1>
                 <p class="location">Location: ${item.locationFound}</p>
                 <button class="claim-btn" data-id="${item._id}">
                     Claim Item
