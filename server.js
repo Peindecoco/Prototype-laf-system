@@ -5,7 +5,6 @@
  import multer from "multer";
  import streamifier from "streamifier";
  import cloudinary from "cloudinary";
- import stringSimilarity from "string-similarity";
  import path from "path";
  import { fileURLToPath } from "url";
  import LostItem from "./models/LostItem.js";
@@ -376,7 +375,10 @@ function computeDeterministicScore(foundPayload, inputPayload) {
     const left = (a || "").toString().trim().toLowerCase();
     const right = (b || "").toString().trim().toLowerCase();
     if (!left || !right) return 0;
-    return stringSimilarity.compareTwoStrings(left, right);
+    if (left === right) return 1;
+    if (left.length < 2 || right.length < 2) return 0;
+    return diceCoefficient(left, right);
+
   };
 
   const descriptionScore = similarity(foundPayload.description, inputPayload.description);
@@ -390,6 +392,33 @@ function computeDeterministicScore(foundPayload, inputPayload) {
     sizeScore * 0.15 +
     shapeScore * 0.15
   );
+}
+function diceCoefficient(left, right) {
+  const leftBigrams = buildBigramCounts(left);
+  const rightBigrams = buildBigramCounts(right);
+
+  let overlap = 0;
+  let leftTotal = 0;
+  let rightTotal = 0;
+
+  for (const count of leftBigrams.values()) leftTotal += count;
+  for (const count of rightBigrams.values()) rightTotal += count;
+
+  for (const [bigram, leftCount] of leftBigrams.entries()) {
+    const rightCount = rightBigrams.get(bigram) || 0;
+    overlap += Math.min(leftCount, rightCount);
+  }
+
+  return (2 * overlap) / (leftTotal + rightTotal);
+}
+
+function buildBigramCounts(text) {
+  const counts = new Map();
+  for (let i = 0; i < text.length - 1; i += 1) {
+    const bigram = text.slice(i, i + 2);
+    counts.set(bigram, (counts.get(bigram) || 0) + 1);
+  }
+  return counts;
 }
  const PORT = process.env.PORT || 10000;
  app.listen(PORT, () => console.log(`🚀 Server listening on port ${PORT}`));
