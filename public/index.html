@@ -65,7 +65,65 @@
 
         </div>
     </div>
+<div class="claim-modal hidden" id="claimModal" role="dialog" aria-modal="true" aria-labelledby="claimModalTitle">
+        <div class="claim-modal-content">
+            <div class="claim-modal-header">
+                <h2 id="claimModalTitle">Claim Item</h2>
+                <button type="button" class="claim-modal-close" id="closeClaimModal" aria-label="Close claim form">&times;</button>
+            </div>
 
+            <form id="claimForm" class="claim-form">
+                <input type="hidden" id="claimItemId" name="claimItemId">
+
+                <div class="claim-form-grid">
+                    <label>
+                        Your name (optional)
+                        <input type="text" name="claimantName" maxlength="120">
+                    </label>
+
+                    <label>
+                        Contact / email (optional)
+                        <input type="text" name="claimantContact" maxlength="160">
+                    </label>
+                </div>
+
+                <label>
+                    Describe your item (required)
+                    <textarea
+                        name="claimDescription"
+                        rows="4"
+                        required
+                        placeholder="Include details only the owner knows."
+                    ></textarea>
+                </label>
+
+                <div class="claim-form-grid">
+                    <label>
+                        Color
+                        <input type="text" name="color" maxlength="80">
+                    </label>
+
+                    <label>
+                        Size
+                        <input type="text" name="size" maxlength="120" placeholder="Ex: Small, Medium, Large, ~12 inches">
+                    </label>
+                </div>
+
+                <label>
+                    Shape
+                    <input type="text" name="shape" maxlength="120" placeholder="Ex: Rectangular, Round, Complex, Jacket">
+                </label>
+
+                <p id="claimFormStatus" class="claim-form-status" aria-live="polite"></p>
+
+                <div class="claim-form-actions">
+                    <button type="button" class="claim-cancel-btn" id="cancelClaimBtn">Cancel</button>
+                    <button type="submit" class="claim-submit-btn">Submit Claim</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
     <footer>
         <div class="footer-content">
             <p>&copy; 2026 FEU High School Lost and Found</p>
@@ -114,7 +172,13 @@ async function loadItems() {
 
 
 let activeFilter = 'all';
-
+const claimModal = document.getElementById('claimModal');
+const claimForm = document.getElementById('claimForm');
+const claimItemIdInput = document.getElementById('claimItemId');
+const claimFormStatus = document.getElementById('claimFormStatus');
+const closeClaimModalBtn = document.getElementById('closeClaimModal');
+const cancelClaimBtn = document.getElementById('cancelClaimBtn');
+    
 function applyFilter() {
     const cards = document.querySelectorAll('#gallery .object-item');
     cards.forEach(card => {
@@ -132,24 +196,55 @@ document.querySelectorAll('.filter-category').forEach(btn => {
 });
 
 /* CLAIM ITEM */
-document.getElementById('gallery').addEventListener('click', async (e) => {
+function openClaimModal(itemId) {
+    if (!itemId) return;
+    claimForm.reset();
+    claimItemIdInput.value = itemId;
+    claimFormStatus.textContent = '';
+    claimModal.classList.remove('hidden');
+    document.body.classList.add('claim-modal-open');
+}
+
+function closeClaimModal() {
+    claimModal.classList.add('hidden');
+    document.body.classList.remove('claim-modal-open');
+}
+
+document.getElementById('gallery').addEventListener('click', (e) => {
     if (!e.target.classList.contains('claim-btn')) return;
+    openClaimModal(e.target.dataset.id);
+});
 
-    const id = e.target.dataset.id;
+closeClaimModalBtn.addEventListener('click', closeClaimModal);
+cancelClaimBtn.addEventListener('click', closeClaimModal);
 
-    const claimantName = (prompt('Your name (optional):') || '').trim();
-    const claimantContact = (prompt('Your contact/ email:') || '').trim();
-    
-    const claimDescription = (prompt('Describe your item (include secret details here):') || '').trim();
+claimModal.addEventListener('click', (e) => {
+    if (e.target === claimModal) closeClaimModal();
+});
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !claimModal.classList.contains('hidden')) {
+        closeClaimModal();
+    }
+});
+
+claimForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const id = claimItemIdInput.value;
+    const formData = new FormData(claimForm);
+    const claimantName = (formData.get('claimantName') || '').toString().trim();
+    const claimantContact = (formData.get('claimantContact') || '').toString().trim();
+    const claimDescription = (formData.get('claimDescription') || '').toString().trim();
+    const color = (formData.get('color') || '').toString().trim();
+    const size = (formData.get('size') || '').toString().trim();
+    const shape = (formData.get('shape') || '').toString().trim();
+
     if (!claimDescription) {
-        alert('Description is required. Include details only the owner knows.');
+        claimFormStatus.textContent = 'Description is required. Include details only the owner knows.';
         return;
     }
-
-    const color = (prompt('Color:') || '').trim();
-    const size = (prompt('Size (Items without normal sizing like clothes, consider anything below 12 inches as small, and anything 24 inches and above as large.):') || '').trim();
-    const shape = (prompt('Shape (If the shape is complex, label it as “complex.” For clothes, specify the type of clothing.):') || '').trim();
-
+    claimFormStatus.textContent = 'Submitting claim...';
+    
     try {
         const res = await fetch(`/api/claim/${id}`, {
             method: 'POST',
@@ -168,12 +263,14 @@ document.getElementById('gallery').addEventListener('click', async (e) => {
 
         if (result.success) {
             alert(`✅ Match successful (${Math.round(result.score * 100)}%).\n${result.rationale || ''}`);
+            closeClaimModal();
             loadItems();
         } else {
             alert(`❌ Not a match (${Math.round((result.score || 0) * 100)}%).\n${result.rationale || 'Please provide more accurate details and try again.'}`);
+            claimFormStatus.textContent = 'No match yet. Please review your details and try again.';
         }
     } catch (err) {
-        alert('Error claiming item: ' + (err?.message || 'unknown error'));
+        claimFormStatus.textContent = 'Error claiming item: ' + (err?.message || 'unknown error');
     }
 });
 
