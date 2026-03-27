@@ -195,7 +195,7 @@ document.querySelectorAll('.filter-category').forEach(btn => {
 });
 
 /* CLAIM ITEM */
-    function openClaimPanel(itemId) {
+function openClaimPanel(itemId) {
     if (!itemId) return;
     claimForm.reset();
     claimItemIdInput.value = itemId;
@@ -204,11 +204,11 @@ document.querySelectorAll('.filter-category').forEach(btn => {
     claimPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-    function closeClaimPanel() {
+function closeClaimPanel() {
     claimPanel.classList.add('hidden');
 }
 
-    document.getElementById('gallery').addEventListener('click', (e) => {
+document.getElementById('gallery').addEventListener('click', (e) => {
     if (!e.target.classList.contains('claim-btn')) return;
     openClaimPanel(e.target.dataset.id);
 });
@@ -216,7 +216,7 @@ document.querySelectorAll('.filter-category').forEach(btn => {
     closeClaimPanelBtn.addEventListener('click', closeClaimPanel);
     cancelClaimBtn.addEventListener('click', closeClaimPanel);
 
-    claimForm.addEventListener('submit', async (e) => {
+claimForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const id = claimItemIdInput.value;
     const formData = new FormData(claimForm);
