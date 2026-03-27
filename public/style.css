@@ -75,6 +75,9 @@ nav {
   display: flex;
   justify-content: center;
   gap: 40px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
 nav a {
   height: 25px;
