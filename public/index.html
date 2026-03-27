@@ -63,64 +63,63 @@
             <!-- DYNAMIC GALLERY -->
             <div class="gallery-main" id="gallery"></div>
 
-        </div>
-    </div>
-<div class="claim-modal hidden" id="claimModal" role="dialog" aria-modal="true" aria-labelledby="claimModalTitle">
-        <div class="claim-modal-content">
-            <div class="claim-modal-header">
-                <h2 id="claimModalTitle">Claim Item</h2>
-                <button type="button" class="claim-modal-close" id="closeClaimModal" aria-label="Close claim form">&times;</button>
-            </div>
-
-            <form id="claimForm" class="claim-form">
-                <input type="hidden" id="claimItemId" name="claimItemId">
-
-                <div class="claim-form-grid">
-                    <label>
-                        Your name
-                        <input type="text" name="claimantName" maxlength="120">
-                    </label>
-
-                    <label>
-                        Contact / email
-                        <input type="text" name="claimantContact" maxlength="160">
-                    </label>
+            <section class="claim-panel hidden" id="claimPanel" aria-labelledby="claimPanelTitle">
+                <div class="claim-panel-header">
+                    <h2 id="claimPanelTitle">Claim Item</h2>
+                    <button type="button" class="claim-panel-close" id="closeClaimPanel" aria-label="Close claim form">&times;</button>
                 </div>
 
-                <label>
-                    Describe your item (required)
-                    <textarea
-                        name="claimDescription"
-                        rows="4"
-                        required
-                        placeholder="Include details only you would know Ex. scratches, dent, stickers etc."
-                    ></textarea>
-                </label>
+                <form id="claimForm" class="claim-form">
+                    <input type="hidden" id="claimItemId" name="claimItemId">
 
-                <div class="claim-form-grid">
+                    <div class="claim-form-grid">
+                        <label>
+                            Your name
+                            <input type="text" name="claimantName" maxlength="120">
+                        </label>
+
+                        <label>
+                            Contact / email
+                            <input type="text" name="claimantContact" maxlength="160">
+                        </label>
+                    </div>
+
                     <label>
-                        Color
-                        <input type="text" name="color" maxlength="80">
+                        Describe your item (required)
+                        <textarea
+                            name="claimDescription"
+                            rows="4"
+                            required
+                            placeholder="Include details only the owner knows."
+                        ></textarea>
                     </label>
 
+                    <div class="claim-form-grid">
+                        <label>
+                            Color
+                            <input type="text" name="color" maxlength="80">
+                        </label>
+
+                        <label>
+                            Size
+                            <input type="text" name="size" maxlength="120" placeholder="Ex: Small, Medium, Large">
+                        </label>
+                    </div>
+
                     <label>
-                        Size
-                        <input type="text" name="size" maxlength="120" placeholder="If the item has normal sizing like shirts, use it, else 12 inches below is small and 24 inches above is Large">
+                        Shape
+                        <input type="text" name="shape" maxlength="120" placeholder="Ex: Rectangular, Round, Complex, Jacket">
                     </label>
-                </div>
 
-                <label>
-                    Shape
-                    <input type="text" name="shape" maxlength="120" placeholder="(If the item has undefinable use complex, for clothes use the necklines Ex. V-Neck, Turtle-Neck etc.)">
-                </label>
+                    <p id="claimFormStatus" class="claim-form-status" aria-live="polite"></p>
 
-                <p id="claimFormStatus" class="claim-form-status" aria-live="polite"></p>
+                    <div class="claim-form-actions">
+                        <button type="button" class="claim-cancel-btn" id="cancelClaimBtn">Cancel</button>
+                        <button type="submit" class="claim-submit-btn">Submit Claim</button>
+                    </div>
+                </form>
+            </section>
 
-                <div class="claim-form-actions">
-                    <button type="button" class="claim-cancel-btn" id="cancelClaimBtn">Cancel</button>
-                    <button type="submit" class="claim-submit-btn">Submit Claim</button>
-                </div>
-            </form>
         </div>
     </div>
     
@@ -172,11 +171,11 @@ async function loadItems() {
 
 
 let activeFilter = 'all';
-const claimModal = document.getElementById('claimModal');
+const claimPanel = document.getElementById('claimPanel');
 const claimForm = document.getElementById('claimForm');
 const claimItemIdInput = document.getElementById('claimItemId');
 const claimFormStatus = document.getElementById('claimFormStatus');
-const closeClaimModalBtn = document.getElementById('closeClaimModal');
+const closeClaimPanelBtn = document.getElementById('closeClaimPanel');
 const cancelClaimBtn = document.getElementById('cancelClaimBtn');
     
 function applyFilter() {
@@ -196,39 +195,28 @@ document.querySelectorAll('.filter-category').forEach(btn => {
 });
 
 /* CLAIM ITEM */
-function openClaimModal(itemId) {
+    function openClaimPanel(itemId) {
     if (!itemId) return;
     claimForm.reset();
     claimItemIdInput.value = itemId;
     claimFormStatus.textContent = '';
-    claimModal.classList.remove('hidden');
-    document.body.classList.add('claim-modal-open');
+    claimPanel.classList.remove('hidden');
+    claimPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-function closeClaimModal() {
-    claimModal.classList.add('hidden');
-    document.body.classList.remove('claim-modal-open');
+    function closeClaimPanel() {
+    claimPanel.classList.add('hidden');
 }
 
-document.getElementById('gallery').addEventListener('click', (e) => {
+    document.getElementById('gallery').addEventListener('click', (e) => {
     if (!e.target.classList.contains('claim-btn')) return;
-    openClaimModal(e.target.dataset.id);
+    openClaimPanel(e.target.dataset.id);
 });
 
-closeClaimModalBtn.addEventListener('click', closeClaimModal);
-cancelClaimBtn.addEventListener('click', closeClaimModal);
+    closeClaimPanelBtn.addEventListener('click', closeClaimPanel);
+    cancelClaimBtn.addEventListener('click', closeClaimPanel);
 
-claimModal.addEventListener('click', (e) => {
-    if (e.target === claimModal) closeClaimModal();
-});
-
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && !claimModal.classList.contains('hidden')) {
-        closeClaimModal();
-    }
-});
-
-claimForm.addEventListener('submit', async (e) => {
+    claimForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const id = claimItemIdInput.value;
     const formData = new FormData(claimForm);
