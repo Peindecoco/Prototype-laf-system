@@ -1,0 +1,290 @@
+:root {
+  --pink: #ff5fa2;
+  --hot-pink: #ff2d83;
+  --purple: #7c3aed;
+  --cream: #fff7ed;
+  --ink: #35213b;
+  --shadow: rgba(124, 58, 237, 0.25);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  font-family: "Segoe UI", Arial, sans-serif;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at 15% 20%, rgba(255, 255, 255, 0.9) 0 8%, transparent 9%),
+    radial-gradient(circle at 80% 10%, rgba(255, 209, 232, 0.8) 0 10%, transparent 11%),
+    linear-gradient(135deg, #ffe4f1 0%, #f8d5ff 48%, #fff0bd 100%);
+  overflow: hidden;
+}
+
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  width: 240px;
+  height: 240px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.35);
+  filter: blur(2px);
+  z-index: 0;
+}
+
+body::before {
+  left: -70px;
+  bottom: -60px;
+}
+
+body::after {
+  right: -80px;
+  top: 35%;
+}
+
+body.birthday-unlocked {
+  overflow-y: auto;
+}
+
+.birthday-page {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+.birthday-card {
+  width: min(680px, 100%);
+  min-height: 430px;
+  padding: clamp(28px, 6vw, 56px);
+  border: 4px solid rgba(255, 255, 255, 0.7);
+  border-radius: 34px;
+  background: rgba(255, 247, 237, 0.82);
+  box-shadow: 0 24px 70px var(--shadow);
+  text-align: center;
+  backdrop-filter: blur(10px);
+}
+
+.eyebrow {
+  margin: 0 0 12px;
+  color: var(--hot-pink);
+  font-size: clamp(1rem, 3vw, 1.25rem);
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+h1,
+h2 {
+  margin: 0;
+  color: var(--purple);
+  font-size: clamp(2.7rem, 9vw, 5.7rem);
+  line-height: 0.98;
+  text-wrap: balance;
+}
+
+.hint,
+.celebration p:not(.eyebrow) {
+  margin: 22px auto 0;
+  max-width: 520px;
+  font-size: clamp(1.05rem, 3vw, 1.35rem);
+  line-height: 1.6;
+}
+
+.answer-stage {
+  position: relative;
+  width: min(100%, 600px);
+  min-height: 280px;
+  margin: 42px auto 0;
+}
+
+.answer-button {
+  position: absolute;
+  top: 44px;
+  min-width: 135px;
+  border: 0;
+  border-radius: 999px;
+  padding: 18px 32px;
+  color: white;
+  font-size: 1.25rem;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 14px 26px rgba(53, 33, 59, 0.18);
+  transition: transform 220ms ease, left 260ms ease, top 260ms ease, background 180ms ease;
+}
+
+.yes-button {
+  left: 8%;
+  background: linear-gradient(135deg, var(--hot-pink), var(--purple));
+}
+
+.no-button {
+  right: 8%;
+  background: linear-gradient(135deg, #94a3b8, #475569);
+}
+
+.answer-button:hover,
+.answer-button:focus-visible {
+  transform: translateY(-4px) scale(1.06);
+}
+
+.yes-button.caught {
+  animation: pulse 0.8s ease infinite alternate;
+}
+
+.hidden {
+  display: none;
+}
+
+.celebration {
+  position: relative;
+  width: min(900px, 100%);
+  min-height: auto;
+  max-height: calc(100vh - 48px);
+  overflow: hidden auto;
+  border-color: rgba(255, 255, 255, 0.92);
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.76), rgba(255, 247, 237, 0.9)) padding-box,
+    linear-gradient(135deg, #ff5fa2, #ffd166, #7c3aed) border-box;
+  box-shadow: 0 30px 90px rgba(255, 45, 131, 0.28), 0 12px 40px rgba(124, 58, 237, 0.2);
+  animation: popIn 480ms ease both;
+}
+
+.celebration h2 {
+  background: linear-gradient(135deg, var(--hot-pink), var(--purple), #f59e0b);
+  background-clip: text;
+  color: transparent;
+  font-size: clamp(2.4rem, 8vw, 5rem);
+}
+
+.birthday-message {
+  position: relative;
+  margin: 30px auto 0;
+  max-width: 680px;
+  padding: clamp(20px, 4vw, 34px);
+  border: 2px solid rgba(255, 95, 162, 0.24);
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.7), 0 18px 40px rgba(124, 58, 237, 0.14);
+}
+
+.birthday-message p {
+  margin: 0 0 18px;
+  max-width: none;
+  font-size: clamp(1.05rem, 2.5vw, 1.28rem);
+  line-height: 1.7;
+}
+
+.birthday-message p:last-child {
+  margin-bottom: 0;
+}
+
+.love-line {
+  color: var(--hot-pink);
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.postscript {
+  display: inline-block;
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: #fff0bd;
+  color: var(--purple);
+  font-weight: 800;
+}
+
+.sparkle-field {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.sparkle-field span {
+  position: absolute;
+  color: var(--hot-pink);
+  font-size: clamp(1.4rem, 4vw, 2.4rem);
+  opacity: 0.7;
+  animation: sparkle 2.4s ease-in-out infinite alternate;
+}
+
+.sparkle-field span:nth-child(1) { left: 8%; top: 10%; }
+.sparkle-field span:nth-child(2) { right: 10%; top: 12%; animation-delay: 0.25s; }
+.sparkle-field span:nth-child(3) { left: 12%; bottom: 18%; animation-delay: 0.5s; }
+.sparkle-field span:nth-child(4) { right: 13%; bottom: 22%; animation-delay: 0.75s; }
+.sparkle-field span:nth-child(5) { left: 50%; top: 4%; animation-delay: 1s; }
+
+.balloons {
+  margin-top: 34px;
+  display: flex;
+  justify-content: center;
+  gap: clamp(10px, 4vw, 28px);
+  font-size: clamp(2.1rem, 8vw, 4.5rem);
+}
+
+.balloons span {
+  animation: float 1.8s ease-in-out infinite alternate;
+}
+
+.balloons span:nth-child(2) { animation-delay: 0.2s; }
+.balloons span:nth-child(3) { animation-delay: 0.4s; }
+.balloons span:nth-child(4) { animation-delay: 0.6s; }
+.balloons span:nth-child(5) { animation-delay: 0.8s; }
+
+@keyframes pulse {
+  to { transform: scale(1.08); }
+}
+
+@keyframes popIn {
+  from { opacity: 0; transform: translateY(18px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes float {
+  to { transform: translateY(-18px) rotate(5deg); }
+}
+
+@keyframes sparkle {
+  from { transform: translateY(0) scale(0.8) rotate(0deg); opacity: 0.4; }
+  to { transform: translateY(-14px) scale(1.2) rotate(12deg); opacity: 1; }
+}
+
+@media (max-width: 560px) {
+  body {
+    overflow: auto;
+  }
+
+  .birthday-card {
+    min-height: 500px;
+  }
+
+  .celebration {
+    max-height: none;
+    overflow: visible;
+  }
+
+  .answer-stage {
+    min-height: 300px;
+  }
+
+  .answer-button {
+    min-width: 120px;
+  }
+
+  .yes-button {
+    left: calc(50% - 60px);
+  }
+
+  .no-button {
+    left: calc(50% - 60px);
+    right: auto;
+    top: 206px;
+  }
+}
